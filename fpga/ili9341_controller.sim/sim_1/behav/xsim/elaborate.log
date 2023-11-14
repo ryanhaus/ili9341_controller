@@ -1,0 +1,29 @@
+Vivado Simulator v2023.1
+Copyright 1986-2022 Xilinx, Inc. All Rights Reserved.
+Copyright 2022-2023 Advanced Micro Devices, Inc. All Rights Reserved.
+Running: C:/Xilinx/Vivado/2023.1/bin/unwrapped/win64.o/xelab.exe --incr --debug typical --relax --mt 2 -L xil_defaultlib -L sim_clk_gen_v1_0_3 -L uvm -L unisims_ver -L unimacro_ver -L secureip -L xpm --snapshot top_sim_behav xil_defaultlib.top_sim xil_defaultlib.glbl -log elaborate.log 
+Using 2 slave threads.
+Starting static elaboration
+Pass Through NonSizing Optimizer
+Completed static elaboration
+Starting simulation data flow analysis
+Completed simulation data flow analysis
+Time Resolution for simulation is 1ps
+Compiling module sim_clk_gen_v1_0_3.sim_clk_gen(CLOCK_PERIOD=83.3333...
+Compiling module xil_defaultlib.sim_clk_12mhz_sim_clk_gen_0_0
+Compiling module xil_defaultlib.sim_clk_12mhz
+Compiling module unisims_ver.BUFG
+Compiling module unisims_ver.IBUF
+Compiling module unisims_ver.MMCME2_ADV(CLKFBOUT_MULT_F=52.87...
+Compiling module xil_defaultlib.tft_clk_wiz_clk_wiz
+Compiling module xil_defaultlib.tft_clk_wiz
+Compiling module xil_defaultlib.counter(MODULUS=280)
+Compiling module xil_defaultlib.counter(MODULUS=328)
+Compiling module xil_defaultlib.counter_2d(X_MODULUS=280,Y_MODUL...
+Compiling module xil_defaultlib.display_region_handler(SYNC_SIZE...
+Compiling module xil_defaultlib.display_region_handler(SYNC_SIZE...
+Compiling module xil_defaultlib.ili9341_controller_default
+Compiling module xil_defaultlib.top
+Compiling module xil_defaultlib.top_sim
+Compiling module xil_defaultlib.glbl
+Built simulation snapshot top_sim_behav

@@ -1,0 +1,1 @@
+--incr --debug typical --relax --mt 2  -L sim_clk_gen_v1_0_3 -L xil_defaultlib -L unisims_ver -L unimacro_ver -L secureip -L xpm --snapshot sim_clk_12mhz xil_defaultlib.sim_clk_12mhz xil_defaultlib.glbl -log elaborate.log

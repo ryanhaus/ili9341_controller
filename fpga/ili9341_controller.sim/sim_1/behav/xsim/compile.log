@@ -1,0 +1,22 @@
+INFO: [VRFC 10-2263] Analyzing Verilog file "C:/Users/ryanh/Documents/projects/fpga/ili9341_controller/ili9341_controller.gen/sources_1/ip/tft_clk_wiz/tft_clk_wiz_sim_netlist.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module tft_clk_wiz
+INFO: [VRFC 10-311] analyzing module tft_clk_wiz_clk_wiz
+INFO: [VRFC 10-311] analyzing module glbl
+INFO: [VRFC 10-2263] Analyzing Verilog file "C:/Users/ryanh/Documents/projects/fpga/ili9341_controller/ili9341_controller.ip_user_files/bd/sim_clk_12mhz/ip/sim_clk_12mhz_sim_clk_gen_0_0/sim/sim_clk_12mhz_sim_clk_gen_0_0.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module sim_clk_12mhz_sim_clk_gen_0_0
+INFO: [VRFC 10-2263] Analyzing Verilog file "C:/Users/ryanh/Documents/projects/fpga/ili9341_controller/ili9341_controller.ip_user_files/bd/sim_clk_12mhz/sim/sim_clk_12mhz.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module sim_clk_12mhz
+INFO: [VRFC 10-2263] Analyzing Verilog file "C:/Users/ryanh/Documents/projects/fpga/ili9341_controller/ili9341_controller.srcs/sources_1/new/counter.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module counter
+INFO: [VRFC 10-2263] Analyzing Verilog file "C:/Users/ryanh/Documents/projects/fpga/ili9341_controller/ili9341_controller.srcs/sources_1/new/counter_2d.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module counter_2d
+INFO: [VRFC 10-2263] Analyzing Verilog file "C:/Users/ryanh/Documents/projects/fpga/ili9341_controller/ili9341_controller.srcs/sources_1/new/display_region_handler.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module display_region_handler
+INFO: [VRFC 10-2263] Analyzing Verilog file "C:/Users/ryanh/Documents/projects/fpga/ili9341_controller/ili9341_controller.srcs/sources_1/new/ili9341_controller.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module ili9341_controller
+INFO: [VRFC 10-2263] Analyzing Verilog file "C:/Users/ryanh/Documents/projects/fpga/ili9341_controller/ili9341_controller.srcs/sources_1/new/top.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module top
+WARNING: [VRFC 10-9336] redeclaration of ANSI port 'tft_dotclk' is not allowed [C:/Users/ryanh/Documents/projects/fpga/ili9341_controller/ili9341_controller.srcs/sources_1/new/top.v:10]
+INFO: [VRFC 10-2263] Analyzing Verilog file "C:/Users/ryanh/Documents/projects/fpga/ili9341_controller/ili9341_controller.sim/sim_1/behav/xsim/glbl.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module glbl
+WARNING: [VRFC 10-3609] overwriting previous definition of module 'glbl' [C:/Users/ryanh/Documents/projects/fpga/ili9341_controller/ili9341_controller.sim/sim_1/behav/xsim/glbl.v:6]

@@ -1,0 +1,4 @@
+xpm_cdc.sv,systemverilog,xpm,../../../../../../../Xilinx/Vivado/2023.1/data/ip/xpm/xpm_cdc/hdl/xpm_cdc.sv,incdir="../../../../ili9341_controller.gen/sources_1/ip/tft_clk_wiz"
+xpm_VCOMP.vhd,vhdl,xpm,../../../../../../../Xilinx/Vivado/2023.1/data/ip/xpm/xpm_VCOMP.vhd,incdir="../../../../ili9341_controller.gen/sources_1/ip/tft_clk_wiz"
+tft_clk_wiz_sim_netlist.v,verilog,xil_defaultlib,../../../../ili9341_controller.gen/sources_1/ip/tft_clk_wiz/tft_clk_wiz_sim_netlist.v,incdir="../../../../ili9341_controller.gen/sources_1/ip/tft_clk_wiz"
+glbl.v,Verilog,xil_defaultlib,glbl.v

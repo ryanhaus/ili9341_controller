@@ -1,0 +1,2 @@
+tft_clk_wiz_sim_netlist.v,verilog,xil_defaultlib,../../../../ili9341_controller.gen/sources_1/ip/tft_clk_wiz/tft_clk_wiz_sim_netlist.v,incdir="../../../../ili9341_controller.gen/sources_1/ip/tft_clk_wiz"
+glbl.v,Verilog,xil_defaultlib,glbl.v

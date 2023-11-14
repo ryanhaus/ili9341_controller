@@ -1,0 +1,3 @@
+sim_clk_12mhz_sim_clk_gen_0_0.v,verilog,xil_defaultlib,../../../bd/sim_clk_12mhz/ip/sim_clk_12mhz_sim_clk_gen_0_0/sim/sim_clk_12mhz_sim_clk_gen_0_0.v,
+sim_clk_12mhz.v,verilog,xil_defaultlib,../../../bd/sim_clk_12mhz/sim/sim_clk_12mhz.v,
+glbl.v,Verilog,xil_defaultlib,glbl.v

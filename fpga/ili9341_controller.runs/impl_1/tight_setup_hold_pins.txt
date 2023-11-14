@@ -1,0 +1,44 @@
++========================+======================+===============================================================+
+| Launch Setup Clock     | Launch Hold Clock    | Pin                                                           |
++========================+======================+===============================================================+
+| clk_out1_tft_clk_wiz_1 | clk_out1_tft_clk_wiz | ili9341_controller_inst/lcd_counter/y_counter/out_reg[6]/D    |
+| clk_out1_tft_clk_wiz_1 | clk_out1_tft_clk_wiz | ili9341_controller_inst/lcd_counter/y_counter/out_reg[7]/D    |
+| clk_out1_tft_clk_wiz_1 | clk_out1_tft_clk_wiz | ili9341_controller_inst/lcd_counter/x_counter/out_reg[6]/D    |
+| clk_out1_tft_clk_wiz_1 | clk_out1_tft_clk_wiz | ili9341_controller_inst/lcd_counter/x_counter/last_tick_reg/D |
+| clk_out1_tft_clk_wiz_1 | clk_out1_tft_clk_wiz | ili9341_controller_inst/lcd_counter/y_counter/out_reg[5]/D    |
+| clk_out1_tft_clk_wiz_1 | clk_out1_tft_clk_wiz | ili9341_controller_inst/lcd_counter/y_counter/last_tick_reg/D |
+| clk_out1_tft_clk_wiz_1 | clk_out1_tft_clk_wiz | ili9341_controller_inst/lcd_counter/x_counter/out_reg[7]/D    |
+| clk_out1_tft_clk_wiz_1 | clk_out1_tft_clk_wiz | ili9341_controller_inst/lcd_counter/y_counter/out_reg[8]/D    |
+| clk_out1_tft_clk_wiz_1 | clk_out1_tft_clk_wiz | ili9341_controller_inst/lcd_counter/x_counter/out_reg[8]/D    |
+| clk_out1_tft_clk_wiz_1 | clk_out1_tft_clk_wiz | ili9341_controller_inst/lcd_counter/y_counter/out_reg[3]/D    |
+| clk_out1_tft_clk_wiz_1 | clk_out1_tft_clk_wiz | ili9341_controller_inst/lcd_counter/x_counter/out_reg[5]/D    |
+| clk_out1_tft_clk_wiz_1 | clk_out1_tft_clk_wiz | ili9341_controller_inst/lcd_counter/y_counter/out_reg[4]/D    |
+| clk_out1_tft_clk_wiz_1 | clk_out1_tft_clk_wiz | ili9341_controller_inst/lcd_counter/x_counter/out_reg[4]/D    |
+| clk_out1_tft_clk_wiz_1 | clk_out1_tft_clk_wiz | ili9341_controller_inst/lcd_counter/x_counter/out_reg[2]/D    |
+| clk_out1_tft_clk_wiz_1 | clk_out1_tft_clk_wiz | ili9341_controller_inst/lcd_counter/y_counter/out_reg[5]/R    |
+| clk_out1_tft_clk_wiz_1 | clk_out1_tft_clk_wiz | ili9341_controller_inst/lcd_counter/y_counter/out_reg[8]/R    |
+| clk_out1_tft_clk_wiz_1 | clk_out1_tft_clk_wiz | ili9341_controller_inst/lcd_counter/y_counter/out_reg[2]/D    |
+| clk_out1_tft_clk_wiz_1 | clk_out1_tft_clk_wiz | ili9341_controller_inst/lcd_counter/x_counter/out_reg[3]/D    |
+| clk_out1_tft_clk_wiz_1 | clk_out1_tft_clk_wiz | ili9341_controller_inst/lcd_counter/x_counter/out_reg[7]/R    |
+| clk_out1_tft_clk_wiz_1 | clk_out1_tft_clk_wiz | ili9341_controller_inst/lcd_counter/x_counter/out_reg[8]/R    |
+| clk_out1_tft_clk_wiz_1 | clk_out1_tft_clk_wiz | ili9341_controller_inst/lcd_counter/x_counter/out_reg[1]/D    |
+| clk_out1_tft_clk_wiz_1 | clk_out1_tft_clk_wiz | ili9341_controller_inst/lcd_counter/y_counter/out_reg[1]/D    |
+| clk_out1_tft_clk_wiz_1 | clk_out1_tft_clk_wiz | ili9341_controller_inst/lcd_counter/x_counter/out_reg[6]/R    |
+| clk_out1_tft_clk_wiz_1 | clk_out1_tft_clk_wiz | ili9341_controller_inst/lcd_counter/x_counter/out_reg[0]/R    |
+| clk_out1_tft_clk_wiz_1 | clk_out1_tft_clk_wiz | ili9341_controller_inst/lcd_counter/x_counter/out_reg[1]/R    |
+| clk_out1_tft_clk_wiz_1 | clk_out1_tft_clk_wiz | ili9341_controller_inst/lcd_counter/x_counter/out_reg[2]/R    |
+| clk_out1_tft_clk_wiz_1 | clk_out1_tft_clk_wiz | ili9341_controller_inst/lcd_counter/x_counter/out_reg[3]/R    |
+| clk_out1_tft_clk_wiz_1 | clk_out1_tft_clk_wiz | ili9341_controller_inst/lcd_counter/x_counter/out_reg[4]/R    |
+| clk_out1_tft_clk_wiz_1 | clk_out1_tft_clk_wiz | ili9341_controller_inst/lcd_counter/x_counter/out_reg[5]/R    |
+| clk_out1_tft_clk_wiz_1 | clk_out1_tft_clk_wiz | ili9341_controller_inst/lcd_counter/y_counter/out_reg[0]/D    |
+| clk_out1_tft_clk_wiz_1 | clk_out1_tft_clk_wiz | ili9341_controller_inst/lcd_counter/x_counter/out_reg[0]/D    |
+| clk_out1_tft_clk_wiz_1 | clk_out1_tft_clk_wiz | ili9341_controller_inst/lcd_counter/y_counter/out_reg[4]/CE   |
+| clk_out1_tft_clk_wiz_1 | clk_out1_tft_clk_wiz | ili9341_controller_inst/lcd_counter/y_counter/out_reg[6]/CE   |
+| clk_out1_tft_clk_wiz_1 | clk_out1_tft_clk_wiz | ili9341_controller_inst/lcd_counter/y_counter/out_reg[1]/CE   |
+| clk_out1_tft_clk_wiz_1 | clk_out1_tft_clk_wiz | ili9341_controller_inst/lcd_counter/y_counter/out_reg[2]/CE   |
+| clk_out1_tft_clk_wiz_1 | clk_out1_tft_clk_wiz | ili9341_controller_inst/lcd_counter/y_counter/out_reg[3]/CE   |
+| clk_out1_tft_clk_wiz_1 | clk_out1_tft_clk_wiz | ili9341_controller_inst/lcd_counter/y_counter/out_reg[7]/CE   |
+| clk_out1_tft_clk_wiz_1 | clk_out1_tft_clk_wiz | ili9341_controller_inst/lcd_counter/y_counter/out_reg[5]/CE   |
+| clk_out1_tft_clk_wiz_1 | clk_out1_tft_clk_wiz | ili9341_controller_inst/lcd_counter/y_counter/out_reg[8]/CE   |
+| clk_out1_tft_clk_wiz_1 | clk_out1_tft_clk_wiz | ili9341_controller_inst/lcd_counter/y_counter/out_reg[0]/CE   |
++------------------------+----------------------+---------------------------------------------------------------+

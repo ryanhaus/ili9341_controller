@@ -1,0 +1,14 @@
+#-----------------------------------------------------------
+# Vivado v2023.1 (64-bit)
+# SW Build 3865809 on Sun May  7 15:05:29 MDT 2023
+# IP Build 3864474 on Sun May  7 20:36:21 MDT 2023
+# SharedData Build 3865790 on Sun May 07 13:33:03 MDT 2023
+# Start of session at: Mon Nov 13 19:52:46 2023
+# Process ID: 31920
+# Current directory: C:/Users/ryanh/Documents/projects/ili9341_controller/fpga/ili9341_controller.runs/synth_1
+# Command line: vivado.exe -log top.vds -product Vivado -mode batch -messageDb vivado.pb -notrace -source top.tcl
+# Log file: C:/Users/ryanh/Documents/projects/ili9341_controller/fpga/ili9341_controller.runs/synth_1/top.vds
+# Journal file: C:/Users/ryanh/Documents/projects/ili9341_controller/fpga/ili9341_controller.runs/synth_1\vivado.jou
+# Running On: LAPTOP-78477V77, OS: Windows, CPU Frequency: 3294 MHz, CPU Physical cores: 12, Host memory: 15775 MB
+#-----------------------------------------------------------
+source top.tcl -notrace

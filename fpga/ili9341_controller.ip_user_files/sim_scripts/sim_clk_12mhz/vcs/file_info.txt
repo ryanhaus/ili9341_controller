@@ -1,0 +1,4 @@
+sim_clk_gen_v1_0_vl_rfs.v,verilog,sim_clk_gen_v1_0_3,../../../../ili9341_controller.gen/sources_1/bd/sim_clk_12mhz/ipshared/fda6/hdl/sim_clk_gen_v1_0_vl_rfs.v,
+sim_clk_12mhz_sim_clk_gen_0_0.v,verilog,xil_defaultlib,../../../bd/sim_clk_12mhz/ip/sim_clk_12mhz_sim_clk_gen_0_0/sim/sim_clk_12mhz_sim_clk_gen_0_0.v,
+sim_clk_12mhz.v,verilog,xil_defaultlib,../../../bd/sim_clk_12mhz/sim/sim_clk_12mhz.v,
+glbl.v,Verilog,xil_defaultlib,glbl.v
