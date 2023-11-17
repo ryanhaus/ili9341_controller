@@ -82,6 +82,18 @@ module ili9341_controller #(
         .front_porch()
     );
     
-    // test: just set every pixel to red
-    assign data = 18'b111111_000000_000000;
+    
+    
+    // test: color gradients
+    reg [5:0] red;
+    reg [5:0] green;
+    reg [5:0] blue;
+    
+    always @(*) begin
+        red = (tft_x - (HSYNC_WIDTH + HBP_WIDTH));
+        green = (tft_y - (VSYNC_HEIGHT + VBP_HEIGHT));
+        blue = 6'b0;
+    end
+    
+    assign data = { red, green, blue };
 endmodule

@@ -19,8 +19,8 @@ The bitstream files for the FPGA must be built in the [Xilinx Vivado software](h
 Here is the circuit as it is currently on a breadboard, without the display:
 ![](pictures/ili9341_breadboard.jpg)
 
-Here is the circuit with the display connected & driven to be solid red:
+Here is the circuit with the display connected & displaying a color gradient:
 ![](pictures/ili9341_breadboard_display.jpg)
 
-Here is a screenshot of the Verilator simulator video output with the solid red test:
+Here is a screenshot of the Verilator simulator video output with the same above color gradient:
 ![](pictures/ili9341_verilator.jpg)

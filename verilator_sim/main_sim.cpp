@@ -97,7 +97,7 @@ int main() {
         // at this point, the frame is complete and the texture and screen can be updated
         SDL_UpdateTexture(texture, NULL, framebuffer, 240 * sizeof(Pixel));
         SDL_RenderClear(renderer);
-        SDL_RenderCopy(renderer, texture, NULL, NULL);
+        SDL_RenderCopyEx(renderer, texture, NULL, NULL, 0, NULL, SDL_FLIP_HORIZONTAL);
         SDL_RenderPresent(renderer);
     }
 

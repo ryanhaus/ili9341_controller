@@ -43,9 +43,14 @@ dependencies/SDL: dependencies
 	-cd dependencies && git clone https://github.com/libsdl-org/SDL.git -b SDL2
 
 # cleaning
-clean: 
+clean: clean_pico clean_verilator
+clean_all: clean clean_dep
+
+clean_verilator:
 	rm -rf verilator_sim/obj_dir
+
+clean_pico:
 	rm -rf pico/build
 
-clean_all: clean
+clean_dep:
 	rm -rf dependencies

@@ -89,7 +89,7 @@ int main() {
     spi_write_command(TFT_SPI_PORT, 0x36, (uint8_t[]) { 0x00 }, 1); // memory access control
     spi_write_command(TFT_SPI_PORT, 0x37, (uint8_t[]) { 0x00 }, 1); // vertical scroll start address
     spi_write_command(TFT_SPI_PORT, 0x3A, (uint8_t[]) { 0x66 }, 1); // pixel format set
-    spi_write_command(TFT_SPI_PORT, 0xB0, (uint8_t[]) { 0x40 }, 1); // RGB interface control
+    spi_write_command(TFT_SPI_PORT, 0xB0, (uint8_t[]) { 0xC0 }, 1); // RGB interface control
     spi_write_command(TFT_SPI_PORT, 0xB1, (uint8_t[]) { 0x00, 0x1F }, 2); // frame rate control
     spi_write_command(TFT_SPI_PORT, 0xB5, (uint8_t[]) { 0x02, 0x02, 0x0A, 0x14 }, 4); // blanking porch control
     spi_write_command(TFT_SPI_PORT, 0xB6, (uint8_t[]) { 0x08, 0x82, 0x27 }, 3); // display function control
