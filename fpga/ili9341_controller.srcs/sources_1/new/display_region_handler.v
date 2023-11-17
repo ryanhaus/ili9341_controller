@@ -16,9 +16,10 @@ module display_region_handler #(
     output reg front_porch = 0
 );
     always @(*) begin
-        sync <=          (position >= 0 && position < SYNC_SIZE);
-        back_porch <=    (position >= SYNC_SIZE && position < SYNC_SIZE + BP_SIZE);
-        display <=       (position >= SYNC_SIZE + BP_SIZE && position < SYNC_SIZE + BP_SIZE + DISPLAY_SIZE);
-        front_porch <=   (position >= SYNC_SIZE + BP_SIZE + DISPLAY_SIZE && position < TOTAL_SIZE);
+        /* verilator lint_off UNSIGNED */
+        sync =          (position >= 0 && position < SYNC_SIZE);
+        back_porch =    (position >= SYNC_SIZE && position < SYNC_SIZE + BP_SIZE);
+        display =       (position >= SYNC_SIZE + BP_SIZE && position < SYNC_SIZE + BP_SIZE + DISPLAY_SIZE);
+        front_porch =   (position >= SYNC_SIZE + BP_SIZE + DISPLAY_SIZE && position < TOTAL_SIZE);
     end
 endmodule

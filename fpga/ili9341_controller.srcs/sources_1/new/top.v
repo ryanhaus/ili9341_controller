@@ -7,7 +7,6 @@ module top(
     output tft_data_enable,
     output [17:0] tft_data
 );
-    wire tft_dotclk;
     tft_clk_wiz tft_clk_wiz_inst(
         .reset(1'b0),
         .clk_in1(sysclk),

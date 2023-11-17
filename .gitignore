@@ -1,6 +1,10 @@
+dependencies
+
 # pico
 pico/build/*
-!pico/build/*.uf2
+
+# verilator
+verilator_sim/obj_dir
 
 # vivado
 *.jou
