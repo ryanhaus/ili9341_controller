@@ -2,10 +2,7 @@
 
 module top_sim();
     reg sysclk;
-    sim_clk_12mhz sim_clk_12mhz_inst(
-        .clk_0(sysclk),
-        .sync_rst_0()
-    );
+    always #83 sysclk = ~sysclk; // close enough to 12MHz
    
     
     wire tft_dotclk;
