@@ -29,14 +29,10 @@ verilator: verilator_sim/obj_dir/Vili9341_controller
 verilator_run: verilator
 	./verilator_sim/obj_dir/Vili9341_controller
 
-verilator_sim/obj_dir/Vili9341_controller: verilator_sim/*.cpp
+verilator_sim/obj_dir/Vili9341_controller: verilator_sim/obj_dir/ili9341_controller.mk
 	
-verilator_sim/*.cpp: verilator_sim/obj_dir/*.cpp
+verilator_sim/obj_dir/ili9341_controller.mk: fpga/ili9341_controller.srcs/sources_1/new/*.v
 	cd verilator_sim && make -C obj_dir -f Vili9341_controller.mk Vili9341_controller
-	
-verilator_sim/obj_dir: fpga/ili9341_controller.srcs/sources_1/new/*.v
-
-verilator_sim/obj_dir/*.cpp: verilator_sim/obj_dir
 
 fpga/ili9341_controller.srcs/sources_1/new/*.v: dependencies/SDL dependencies/verilator
 	cd fpga/ili9341_controller.srcs/sources_1/new && \
