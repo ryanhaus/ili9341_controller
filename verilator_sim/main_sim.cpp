@@ -3,7 +3,7 @@
 #include <SDL.h>
 #include "Vili9341_controller.h"
 
-#define WINDOW_SCALE 4
+#define WINDOW_SCALE 1
 
 using namespace std;
 

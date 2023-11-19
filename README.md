@@ -9,7 +9,7 @@ Required dependencies: `sudo apt install cmake gcc-arm-none-eabi libnewlib-arm-n
 The firmware for the RP Pico can be built using `make pico` in the top directory. Note that the Pico SDK will be installed as part of the build process. Once fully compiled, the file `/pico/build/ili9341_controller.uf2` can be uploaded to the Pico.
 
 ### Verilator simulator (w/ SDL)
-Required dependencies: `sudo apt install libsdl2-dev verilator git help2man perl python3 make autoconf g++ flex bison ccache libgoogle-perftools-dev numactl perl-doc libfl-dev zlibc zlib1g zlib1g-dev`
+Required dependencies: `sudo apt install libsdl2-dev verilator git help2man perl python3 make autoconf g++ flex bison ccache libgoogle-perftools-dev numactl perl-doc`
 The Verilator simulator can be built with `make verilator`, and can be made & run using `make verilator_run`, or the file `/verilator_sim/obj_dir/ili9341_controller` can be executed.
 
 ### Bitstream files for FPGA
