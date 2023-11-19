@@ -15,6 +15,9 @@ The Verilator simulator can be built with `make verilator`, and can be made & ru
 ### Bitstream files for FPGA
 The bitstream files for the FPGA must be built in the [Xilinx Vivado software](https://www.xilinx.com/support/download.html). The `fpga` directory has all files required for building. The project is set up for the Digilent CMOD A7-35T as shown in the photos below (schematic soon).
 
+## Cleaning Files
+The pico firmware can be cleaned with `make clean_pico`, the dependencies can also be cleaned with `make clean_pico_all`. For the verilator sim, the respective commands are `make clean_verilator` and `make clean_verilator_all`. To clean both at once, the respective commands are `make clean` and `make clean_all`. To clean just the dependencies for both, use `make clean_dep`.
+
 ## Photos
 Here is the circuit as it is currently on a breadboard, without the display:
 ![](pictures/ili9341_breadboard.jpg)

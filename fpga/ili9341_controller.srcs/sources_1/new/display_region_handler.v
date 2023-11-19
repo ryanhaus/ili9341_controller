@@ -1,3 +1,4 @@
+// takes in a one-dimensional position and outputs which 'region' that position is in based on the parameters
 module display_region_handler #(
     parameter SYNC_SIZE = 1,
     parameter BP_SIZE = 1,

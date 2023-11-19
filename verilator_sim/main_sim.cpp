@@ -71,17 +71,17 @@ int main() {
 
 
         // loop until vsync is high
-        while (!top->vsync) {
-            top->dotclk ^= 1;
+        while (!top->tft_vsync) {
+            top->tft_dotclk ^= 1;
             top->eval();
         }
 
         // loop until vsync is low (frame is done)
         int i = 0; // counter for framebuffer
-        while (top->vsync) {
-            if (top->dotclk == 1) {
-                if (top->data_enable) {
-                    uint32_t data = top->data;
+        while (top->tft_vsync) {
+            if (top->tft_dotclk == 1) {
+                if (top->tft_data_enable) {
+                    uint32_t data = top->tft_data;
                     uint8_t b = ((data >> 0) & 0x3F) << 2;
                     uint8_t g = ((data >> 6) & 0x3F) << 2;
                     uint8_t r = ((data >> 12) & 0x3F) << 2;
@@ -90,7 +90,7 @@ int main() {
                 }
             }
 
-            top->dotclk ^= 1;
+            top->tft_dotclk ^= 1;
             top->eval();
         }
 

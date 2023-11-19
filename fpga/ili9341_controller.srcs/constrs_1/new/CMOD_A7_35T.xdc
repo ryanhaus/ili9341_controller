@@ -1,4 +1,3 @@
-set_param general.maxThreads 8
 ## This file is a general .xdc for the CmodA7 rev. B
 ## To use it in a project:
 ## - uncomment the lines corresponding to used pins

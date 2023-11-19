@@ -1,3 +1,4 @@
+// this module just counts over a certain range determined by MODULUUS, also outputs when the last tick is occuring
 module counter #(
     parameter MODULUS = 10,
     localparam MODULUS_BITS = $clog2(MODULUS)

@@ -29,10 +29,15 @@ verilator: verilator_sim/obj_dir/Vili9341_controller
 verilator_run: verilator
 	./verilator_sim/obj_dir/Vili9341_controller
 
-verilator_sim/obj_dir/Vili9341_controller: verilator_sim/obj_dir/*.cpp verilator_sim/*.cpp fpga/ili9341_controller.srcs/sources_1/new/*.v
+verilator_sim/obj_dir/Vili9341_controller: verilator_sim/*.cpp
+	
+verilator_sim/*.cpp: verilator_sim/obj_dir/*.cpp
 	cd verilator_sim && make -C obj_dir -f Vili9341_controller.mk Vili9341_controller
 	
-verilator_sim/obj_dir/*.cpp: fpga/ili9341_controller.srcs/sources_1/new/*.v
+verilator_sim/obj_dir: fpga/ili9341_controller.srcs/sources_1/new/*.v
+
+verilator_sim/obj_dir/*.cpp: verilator_sim/obj_dir
+
 fpga/ili9341_controller.srcs/sources_1/new/*.v: dependencies/SDL dependencies/verilator
 	cd fpga/ili9341_controller.srcs/sources_1/new && \
 	verilator -I$(shell pwd)/dependencies/SDL/include/ ili9341_controller.v --cc -Mdir $(shell pwd)/verilator_sim/obj_dir -Wno-WIDTH --exe main_sim.cpp \
@@ -44,13 +49,20 @@ dependencies/SDL: dependencies
 
 # cleaning
 clean: clean_pico clean_verilator
-clean_all: clean clean_dep
+clean_all: clean_pico_all clean_verilator_all
 
 clean_verilator:
 	rm -rf verilator_sim/obj_dir
 
+clean_verilator_all: clean_verilator
+	rm -rf dependencies/verilator
+	rm -rf dependencies/SDL
+
 clean_pico:
 	rm -rf pico/build
+
+clean_pico_all: clean_pico
+	rm -rf dependencies/pico-sdk
 
 clean_dep:
 	rm -rf dependencies

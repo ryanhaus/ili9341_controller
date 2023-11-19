@@ -3,7 +3,7 @@
 module top_sim();
     reg sysclk;
     initial sysclk = 0;
-    always #83 sysclk = ~sysclk; // close enough to 12MHz
+    always #42 sysclk = ~sysclk; // close enough to 12MHz
    
     
     wire tft_dotclk;

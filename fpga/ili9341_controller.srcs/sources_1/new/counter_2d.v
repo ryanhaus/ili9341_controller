@@ -1,3 +1,4 @@
+// uses 2 counters to count along a 2D rectangle (the display)
 module counter_2d #(
     parameter X_MODULUS = 10,
     localparam X_MODULUS_BITS = $clog2(X_MODULUS),
