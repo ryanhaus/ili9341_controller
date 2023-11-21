@@ -3,9 +3,10 @@ module counter #(
     parameter MODULUS = 10,
     localparam MODULUS_BITS = $clog2(MODULUS)
 ) (
-    input clk,
-    input enable,
     input reset,
+    input enable,
+    
+    input clk,
     
     output reg [MODULUS_BITS-1 : 0] out,
     output reg last_tick = 0

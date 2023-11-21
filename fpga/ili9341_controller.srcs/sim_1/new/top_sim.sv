@@ -10,7 +10,7 @@ module top_sim();
     wire tft_hsync;
     wire tft_vsync;
     wire tft_data_enable;
-    wire [17:0] tft_data;
+    wire [5:0] tft_data;
     
     top top_inst(
         .sysclk(sysclk),

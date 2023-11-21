@@ -10,7 +10,7 @@ The firmware for the RP Pico can be built using `make pico` in the top directory
 
 ### Verilator simulator (w/ SDL)
 Required dependencies: `sudo apt install libsdl2-dev verilator git help2man perl python3 make autoconf g++ flex bison ccache libgoogle-perftools-dev numactl perl-doc`
-The Verilator simulator can be built with `make verilator`, and can be made & run using `make verilator_run`, or the file `/verilator_sim/obj_dir/ili9341_controller` can be executed.
+The Verilator simulator can be built with `make verilator`, and can be made & run using `make verilator_run`, or the file `/verilator_sim/obj_dir/Vili9341_controller` can be executed.
 
 ### Bitstream files for FPGA
 The bitstream files for the FPGA must be built in the [Xilinx Vivado software](https://www.xilinx.com/support/download.html). The `fpga` directory has all files required for building. The project is set up for the Digilent CMOD A7-35T as shown in the photos below (schematic soon).

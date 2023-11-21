@@ -1,3 +1,4 @@
+default: all
 all: pico verilator
 
 # for building pico binaries

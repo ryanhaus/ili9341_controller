@@ -88,7 +88,7 @@ int main() {
     spi_write_command(TFT_SPI_PORT, 0xC7, (uint8_t[]) { 0x86 }, 1); // VCOM control 2
     spi_write_command(TFT_SPI_PORT, 0x36, (uint8_t[]) { 0x00 }, 1); // memory access control
     spi_write_command(TFT_SPI_PORT, 0x37, (uint8_t[]) { 0x00 }, 1); // vertical scroll start address
-    spi_write_command(TFT_SPI_PORT, 0x3A, (uint8_t[]) { 0x66 }, 1); // pixel format set
+    spi_write_command(TFT_SPI_PORT, 0x3A, (uint8_t[]) { 0x55 }, 1); // pixel format set
     spi_write_command(TFT_SPI_PORT, 0xB0, (uint8_t[]) { 0xC0 }, 1); // RGB interface control
     spi_write_command(TFT_SPI_PORT, 0xB1, (uint8_t[]) { 0x00, 0x1F }, 2); // frame rate control
     spi_write_command(TFT_SPI_PORT, 0xB5, (uint8_t[]) { 0x02, 0x02, 0x0A, 0x14 }, 4); // blanking porch control
@@ -97,7 +97,7 @@ int main() {
     spi_write_command(TFT_SPI_PORT, 0x26, (uint8_t[]) { 0x01 }, 1); // gamma curve selected
     spi_write_command(TFT_SPI_PORT, 0xE0, (uint8_t[]) { 0x0F, 0x31, 0x2B, 0x0C, 0x0E, 0x08, 0x4E, 0xF1, 0x37, 0x07, 0x10, 0x03, 0x0E, 0x09, 0x00 }, 15); // positive gamma correction
     spi_write_command(TFT_SPI_PORT, 0xE1, (uint8_t[]) { 0x00, 0x0E, 0x14, 0x03, 0x11, 0x07, 0x31, 0xC1, 0x48, 0x08, 0x0F, 0x0C, 0x31, 0x36, 0x0F }, 15); // negative gamma correction
-    spi_write_command(TFT_SPI_PORT, 0xF6, (uint8_t[]) { 0x09, 0x00, 0x06 }, 3); // interface control
+    spi_write_command(TFT_SPI_PORT, 0xF6, (uint8_t[]) { 0x09, 0x00, 0x07 }, 3); // interface control
     spi_write_command(TFT_SPI_PORT, 0x11, NULL, 0); // sleep out
     sleep_ms(120);
     spi_write_command(TFT_SPI_PORT, 0x29, NULL, 0); // display on

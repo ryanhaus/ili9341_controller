@@ -18,9 +18,9 @@ module counter_2d #(
     counter #(
         .MODULUS(X_MODULUS)
     ) x_counter (
-        .clk(clk),
-        .enable(enable),
         .reset(reset),
+        .enable(enable),
+        .clk(clk),
         .out(out_x),
         .last_tick(last_tick_x)
     );
@@ -28,9 +28,9 @@ module counter_2d #(
     counter #(
         .MODULUS(Y_MODULUS)
     ) y_counter (
-        .clk(clk),
-        .enable(enable && last_tick_x),
         .reset(reset),
+        .enable(enable && last_tick_x),
+        .clk(clk),
         .out(out_y),
         .last_tick()
     );

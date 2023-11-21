@@ -3,7 +3,7 @@
 #include <SDL.h>
 #include "Vili9341_controller.h"
 
-#define WINDOW_SCALE 1
+#define WINDOW_SCALE 2
 
 using namespace std;
 
@@ -13,6 +13,7 @@ struct Pixel {
 };
 
 Pixel framebuffer[320 * 240];
+uint8_t* framebuffer_ptr = (uint8_t*)framebuffer;
 
 int main() {
     // initialize SDL for video
@@ -56,6 +57,9 @@ int main() {
     // create verilator instance of the ILI9341 controller
     Vili9341_controller *top = new Vili9341_controller;
 
+    top->reset = 0;
+    top->enable = 1;
+
 
 
     // main loop
@@ -72,26 +76,36 @@ int main() {
 
         // loop until vsync is high
         while (!top->tft_vsync) {
-            top->tft_dotclk ^= 1;
-            top->eval();
+            for (int i = 0; i < 3; i++) {
+                top->tft_dotclk = 1;
+                top->eval();
+
+                top->tft_dotclk = 0;
+                top->eval();
+            }
         }
 
-        // loop until vsync is low (frame is done)
-        int i = 0; // counter for framebuffer
-        while (top->tft_vsync) {
-            if (top->tft_dotclk == 1) {
-                if (top->tft_data_enable) {
-                    uint32_t data = top->tft_data;
-                    uint8_t b = ((data >> 0) & 0x3F) << 2;
-                    uint8_t g = ((data >> 6) & 0x3F) << 2;
-                    uint8_t r = ((data >> 12) & 0x3F) << 2;
 
-                    framebuffer[i++] = Pixel { 0xFF, b, g, r };
+        // loop until vsync is low (frame is done)
+        int framebuffer_i = 0; // counter for framebuffer
+        while (top->tft_vsync) {
+            bool data_changed = false;
+
+            for (int i = 0; i < 3; i++) {
+                top->tft_dotclk = 1;
+                top->eval();
+
+                if (top->tft_data_enable || data_changed) {
+                    data_changed = true;
+                    framebuffer_ptr[framebuffer_i * 4 + (3 - i)] = (uint8_t)top->tft_data << 2;
                 }
+
+                top->tft_dotclk = 0;
+                top->eval();
             }
 
-            top->tft_dotclk ^= 1;
-            top->eval();
+            if (data_changed)
+                framebuffer_i++;
         }
 
         // at this point, the frame is complete and the texture and screen can be updated

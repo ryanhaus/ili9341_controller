@@ -1,5 +1,8 @@
 // this module keeps track of the current position in the display and also drives the synchronization signals
 module display_handler #(
+    // information about number of clocks per pixel
+    parameter CLKS_PER_PIXEL = 3,
+    
     // information about the sync periods along the horizontal axis
     parameter HSYNC_WIDTH = 10,
     parameter HBP_WIDTH = 20,
@@ -17,7 +20,12 @@ module display_handler #(
     parameter DISPLAY_WIDTH_BITS = $clog2(DISPLAY_WIDTH),
     parameter DISPLAY_HEIGHT_BITS = $clog2(DISPLAY_HEIGHT)
 ) (
+    input reset,
+    input enable,
+    
     input dotclk,
+    
+    output [$clog2(CLKS_PER_PIXEL)-1 : 0] dotclk_count,
     
     output hsync,
     output vsync,
@@ -34,6 +42,23 @@ module display_handler #(
     localparam WIDTH_BITS = $clog2(TOTAL_WIDTH);
     localparam HEIGHT_BITS = $clog2(TOTAL_HEIGHT);
 
+
+
+    // counter to keep track of when to advance the pixel counter
+    wire dotclk_last_tick;
+    
+    counter #(
+        .MODULUS(CLKS_PER_PIXEL)
+    ) dotclk_counter (
+        .reset(reset),
+        .enable(enable),
+        .clk(dotclk),
+        .out(dotclk_count),
+        .last_tick(dotclk_last_tick)
+    );
+
+
+
     // counters to hold the current pixel position on the screen
     wire [WIDTH_BITS-1 : 0] tft_x;
     wire [HEIGHT_BITS-1 : 0] tft_y;
@@ -43,8 +68,8 @@ module display_handler #(
         .Y_MODULUS(TOTAL_HEIGHT)
     ) lcd_counter (
         .clk(dotclk),
-        .enable(1'b1),
-        .reset(1'b0),
+        .enable(enable && dotclk_last_tick),
+        .reset(reset),
         .out_x(tft_x),
         .out_y(tft_y)
     );
