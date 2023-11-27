@@ -9,11 +9,13 @@ using namespace std;
 
 #pragma pack(push, 1)
 struct Pixel {
-    uint8_t a, b, g, r;
+    union {
+        struct { uint8_t a, b, g, r; };
+        struct { uint8_t brightness, colors[3]; };
+    };
 };
 
 Pixel framebuffer[320 * 240];
-uint8_t* framebuffer_ptr = (uint8_t*)framebuffer;
 
 int main() {
     // initialize SDL for video
@@ -73,40 +75,42 @@ int main() {
         }
 
 
-
-        // loop until vsync is high
+        // loop through vsync until it is high
         while (!top->tft_vsync) {
-            for (int i = 0; i < 3; i++) {
-                top->tft_dotclk = 1;
-                top->eval();
-
-                top->tft_dotclk = 0;
-                top->eval();
-            }
+            // cycle clock
+            top->tft_dotclk = 0;
+            top->eval();
+            top->tft_dotclk = 1;
+            top->eval();
         }
 
+        unsigned int transfer_count = 0;
+        unsigned int pixel = 0;
 
-        // loop until vsync is low (frame is done)
-        int framebuffer_i = 0; // counter for framebuffer
+        // loop through vsync until it is low (frame end)
         while (top->tft_vsync) {
-            bool data_changed = false;
+            // cycle clock
+            top->tft_dotclk = 0;
+            top->eval();
+            top->tft_dotclk = 1;
+            top->eval();
 
-            for (int i = 0; i < 3; i++) {
-                top->tft_dotclk = 1;
-                top->eval();
+            // if data enable is high, start sending data to the framebuffer
+            if (top->tft_data_enable) {
+                int current_color = transfer_count % 3;
 
-                if (top->tft_data_enable || data_changed) {
-                    data_changed = true;
-                    framebuffer_ptr[framebuffer_i * 4 + (3 - i)] = (uint8_t)top->tft_data << 2;
+                framebuffer[pixel].brightness = 0xFF;
+                framebuffer[pixel].colors[current_color] = top->tft_data << 2;
+
+                // if all three colors have been sent, advance to next pixel
+                if (transfer_count % 3 == 2) {
+                    pixel++;
                 }
 
-                top->tft_dotclk = 0;
-                top->eval();
+                transfer_count++;
             }
-
-            if (data_changed)
-                framebuffer_i++;
         }
+        
 
         // at this point, the frame is complete and the texture and screen can be updated
         SDL_UpdateTexture(texture, NULL, framebuffer, 240 * sizeof(Pixel));
