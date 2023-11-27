@@ -8,7 +8,7 @@ module ili9341_controller(
     output tft_hsync,
     output tft_vsync,
     output tft_data_enable,
-    output reg [5:0] tft_data
+    output [5:0] tft_data
 );
     // determine sync signals & where we are on the display
     wire [$clog2(240)-1 : 0] tft_display_x;
