@@ -13,9 +13,9 @@ module color_mux #(
     always @(*) begin
         if (enable)
             case (selector)
-                2'd0: data = red;
+                2'd0: data = blue;
                 2'd1: data = green;
-                2'd2: data = blue;
+                2'd2: data = red;
                 default: data = 0;
             endcase
         else data = 0;     
