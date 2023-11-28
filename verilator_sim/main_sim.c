@@ -62,9 +62,8 @@ int main() {
     top->reset = 0;
     top->enable = 1;
 
-
-
     // main loop
+    int frame_counter = 0;
     while (true) {
         // close window if X is pressed
         SDL_Event e;
@@ -117,6 +116,22 @@ int main() {
         SDL_RenderClear(renderer);
         SDL_RenderCopyEx(renderer, texture, NULL, NULL, 0, NULL, SDL_FLIP_HORIZONTAL);
         SDL_RenderPresent(renderer);
+
+
+
+        // increase frame counter, change color every 60 frames
+        if (++frame_counter == 60) {
+            frame_counter = 0;
+
+            for (int i = 0; i < 24; i++) {
+                top->spi_sck = 0;
+                top->spi_sda = rand() & 0x3FF;
+                top->eval();
+                
+                top->spi_sck = 1;
+                top->eval();
+            }
+        }
     }
 
     // free resources
