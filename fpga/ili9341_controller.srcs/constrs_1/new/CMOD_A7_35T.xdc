@@ -1,3 +1,5 @@
+set_property CLOCK_DEDICATED_ROUTE FALSE [ get_nets spi_sck_IBUF ]; # TODO: route the SCK pin to a clock dedicated pin
+
 ## This file is a general .xdc for the CmodA7 rev. B
 ## To use it in a project:
 ## - uncomment the lines corresponding to used pins
@@ -44,8 +46,8 @@ set_property -dict { PACKAGE_PIN L3    IOSTANDARD LVCMOS33 } [get_ports { tft_do
 set_property -dict { PACKAGE_PIN A16   IOSTANDARD LVCMOS33 } [get_ports { tft_data[5]  }]; #IO_L12P_T1_MRCC_16 Sch=pio[03]
 set_property -dict { PACKAGE_PIN K3    IOSTANDARD LVCMOS33 } [get_ports { tft_data[3]  }]; #IO_L7N_T1_AD6N_35 Sch=pio[04]
 set_property -dict { PACKAGE_PIN C15   IOSTANDARD LVCMOS33 } [get_ports { tft_data[1]  }]; #IO_L11P_T1_SRCC_16 Sch=pio[05]
-#set_property -dict { PACKAGE_PIN H1    IOSTANDARD LVCMOS33 } [get_ports { pio6  }]; #IO_L3P_T0_DQS_AD5P_35 Sch=pio[06]
-#set_property -dict { PACKAGE_PIN A15   IOSTANDARD LVCMOS33 } [get_ports { pio7  }]; #IO_L6N_T0_VREF_16 Sch=pio[07]
+set_property -dict { PACKAGE_PIN H1    IOSTANDARD LVCMOS33 } [get_ports { spi_sda  }]; #IO_L3P_T0_DQS_AD5P_35 Sch=pio[06]
+set_property -dict { PACKAGE_PIN A15   IOSTANDARD LVCMOS33 } [get_ports { spi_sck  }]; #IO_L6N_T0_VREF_16 Sch=pio[07]
 #set_property -dict { PACKAGE_PIN B15   IOSTANDARD LVCMOS33 } [get_ports { pio8  }]; #IO_L11N_T1_SRCC_16 Sch=pio[08]
 #set_property -dict { PACKAGE_PIN A14   IOSTANDARD LVCMOS33 } [get_ports { pio9  }]; #IO_L6P_T0_16 Sch=pio[09]
 #set_property -dict { PACKAGE_PIN J3    IOSTANDARD LVCMOS33 } [get_ports { pio10 }]; #IO_L7P_T1_AD6P_35 Sch=pio[10]

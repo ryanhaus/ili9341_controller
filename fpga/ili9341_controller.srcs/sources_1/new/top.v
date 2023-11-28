@@ -1,6 +1,9 @@
 module top(
     input sysclk,
     
+    input spi_sck,
+    input spi_sda,
+    
     output tft_dotclk,
     output tft_hsync,
     output tft_vsync,
@@ -20,6 +23,8 @@ module top(
     ili9341_controller ili9341_controller_inst (
         .reset(1'b0),
         .enable(1'b1),
+        .spi_sck(spi_sck),
+        .spi_sda(spi_sda),
         .tft_dotclk(tft_dotclk),
         .tft_hsync(tft_hsync),
         .tft_vsync(tft_vsync),

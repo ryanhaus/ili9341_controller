@@ -3,6 +3,9 @@ module ili9341_controller(
     input reset,
     input enable,
     
+    input spi_sck,
+    input spi_sda,
+    
     input tft_dotclk,
     
     output tft_hsync,
@@ -29,20 +32,32 @@ module ili9341_controller(
     
     
     
-    // test: color gradients
-    reg [5:0] red;
-    reg [5:0] green;
-    reg [5:0] blue;
+    // test: spi color    
+    wire [23:0] input_color;
+    wire spi_data_ready;
     
-    always @(*) begin
-        red = tft_display_x;
-        green = tft_display_y;
-        blue = 6'b0;
-    end
+    spi_input #(
+        .DATA_BITS(24)
+    ) spi_color_input_inst (
+        .sck(spi_sck),
+        .sda(spi_sda),
+        .data(input_color),
+        .data_ready(spi_data_ready)
+    );
     
     
     
     // for outputting colors to the data bus
+    reg [5:0] red;
+    reg [5:0] green;
+    reg [5:0] blue;
+    
+    always @(posedge spi_data_ready) begin
+        red <= input_color[5:0];
+        green <= input_color[13:8];
+        blue <= input_color[21:16];
+    end
+    
     color_mux color_mux_inst(
         .enable(tft_data_enable),
         .selector(dotclk_count),
