@@ -30,7 +30,7 @@ verilator_sim/obj_dir/Vili9341_controller: verilator_sim/obj_dir/ili9341_control
 
 verilator_sim/obj_dir/ili9341_controller.mk: fpga/ili9341_controller.srcs/sources_1/new/*.v
 	cd fpga/ili9341_controller.srcs/sources_1/new && \
-	verilator -I$(shell pwd)/dependencies/SDL/include/ ili9341_controller.v --cc -Mdir $(shell pwd)/verilator_sim/obj_dir -Wno-WIDTH --exe main_sim.c \
+	verilator ili9341_controller.v --cc -Mdir $(shell pwd)/verilator_sim/obj_dir -Wno-WIDTH --exe main_sim.c \
 		-CFLAGS "$(shell sdl2-config --cflags)" -LDFLAGS "$(shell sdl2-config --libs)"
 
 # cleaning
