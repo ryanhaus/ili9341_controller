@@ -15,7 +15,7 @@ module spi_input #(
     always @(posedge sck) begin
         data_ready = 0; // initially set the data as not ready
     
-        // shift data right 1 bit, insert new SDA data into MSB
+        // shift data left 1 bit, insert new SDA data into LSB
         for (i = DATA_BITS - 1; i > 0; i = i - 1) begin
             data[i] = data[i - 1];
         end
