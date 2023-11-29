@@ -9,5 +9,5 @@ verilator_sim/obj_dir
 
 # vivado
 fpga/*
-!fpga/ili9341_controller.srcs/*
+!fpga/ili9341_controller.srcs
 !fpga/ili9341_controller.xpr

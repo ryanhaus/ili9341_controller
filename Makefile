@@ -4,7 +4,7 @@ all: pico verilator
 # for building pico binaries
 pico: pico/build/ili9341_controller.uf2
 
-pico/build/ili9341_controller.uf2: dependencies/pico-sdk pico/build/Makefile pico/*.c
+pico/build/ili9341_controller.uf2: dependencies/pico-sdk pico/build/Makefile pico/*.c pico/*.h
 	cd pico/build && make
 
 pico/build/Makefile: export PICO_SDK_PATH=$(shell pwd)/dependencies/pico-sdk

@@ -62,6 +62,8 @@ int main() {
     top->reset = 0;
     top->enable = 1;
 
+    uint8_t red = 0;
+
     // main loop
     int frame_counter = 0;
     while (true) {
@@ -111,7 +113,7 @@ int main() {
         }
         
 
-        // at this point, the frame is complete and the texture and screen can be updated
+        // at this point, the frame is complete and the texture and screen can be updated 
         SDL_UpdateTexture(texture, NULL, framebuffer, 240 * sizeof(Pixel));
         SDL_RenderClear(renderer);
         SDL_RenderCopyEx(renderer, texture, NULL, NULL, 0, NULL, SDL_FLIP_HORIZONTAL);
@@ -122,10 +124,12 @@ int main() {
         // increase frame counter, change color every 60 frames
         if (++frame_counter == 60) {
             frame_counter = 0;
+            red++;
 
             for (int i = 0; i < 24; i++) {
                 top->spi_sck = 0;
-                top->spi_sda = rand() & 0x3FF;
+                top->spi_sda = (red & (1 << (23 - i))) > 0;
+
                 top->eval();
                 
                 top->spi_sck = 1;

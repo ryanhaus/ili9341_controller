@@ -52,10 +52,12 @@ module ili9341_controller(
     reg [5:0] green;
     reg [5:0] blue;
     
-    always @(posedge spi_data_ready) begin
-        red <= input_color[5:0];
-        green <= input_color[13:8];
-        blue <= input_color[21:16];
+    always @(*) begin
+        if (spi_data_ready) begin
+            red <= input_color[5:0];
+            green <= input_color[13:8];
+            blue <= input_color[21:16];
+        end
     end
     
     color_mux color_mux_inst(
