@@ -17,6 +17,16 @@ struct Pixel {
 
 Pixel framebuffer[320 * 240];
 
+void memory_tick(Vili9341_controller* top, uint8_t* sram) {
+    if (top->memory_read) {
+        top->memory_data = sram[top->memory_addr];
+    } else if (top->memory_write) {
+        sram[top->memory_addr] = top->memory_data;
+    }
+    
+    top->eval();
+}
+
 int main() {
     // initialize SDL for video
     if(SDL_Init(SDL_INIT_VIDEO) < 0) {
@@ -66,6 +76,10 @@ int main() {
 
     // main loop
     int frame_counter = 0;
+    uint8_t sram[0b10000000000000000];
+
+    memset(sram, 0xFF, sizeof(sram));
+
     while (true) {
         // close window if X is pressed
         SDL_Event e;
@@ -96,6 +110,8 @@ int main() {
             top->tft_dotclk = 1;
             top->eval();
 
+            memory_tick(top, sram);
+
             // if data enable is high, start sending data to the framebuffer
             if (top->tft_data_enable) {
                 int current_color = transfer_count % 3;
@@ -121,20 +137,18 @@ int main() {
 
 
 
-        // increase frame counter, change color every 60 frames
-        if (++frame_counter == 60) {
-            frame_counter = 0;
-            red++;
-
+        for (int x = 0; x < 50; x++) {
             for (int i = 0; i < 24; i++) {
                 top->spi_sck = 0;
-                top->spi_sda = (red & (1 << (23 - i))) > 0;
+                top->spi_sda = rand() & 1;
 
                 top->eval();
                 
                 top->spi_sck = 1;
                 top->eval();
             }
+
+            memory_tick(top, sram);
         }
     }
 

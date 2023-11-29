@@ -13,6 +13,11 @@ module top_sim();
     wire tft_vsync;
     wire tft_data_enable;
     wire [5:0] tft_data;
+    wire [18:0] memory_addr;
+    wire [7:0] memory_data;
+    wire memory_read;
+    wire memory_write;
+    wire memory_enable;
     
     top top_inst(
         .sysclk(sysclk),
@@ -22,7 +27,12 @@ module top_sim();
         .tft_hsync(tft_hsync),
         .tft_vsync(tft_vsync),
         .tft_data_enable(tft_data_enable),
-        .tft_data(tft_data)
+        .tft_data(tft_data),
+        .MemAdr(memory_addr),
+        .MemDB(memory_data),
+        .RamOEn(memory_read),
+        .RamWEn(memory_write),
+        .RamCEn(memory_enable)
     );
     
     
@@ -32,7 +42,7 @@ module top_sim();
         
         for (i = 0; i < 24; i = i + 1) begin
             #20
-            spi_sda <= (i < 8);
+            spi_sda <= (i < 8) || (i >= 20);
             spi_sck <= 0;
             #20
             spi_sck <= 1;
