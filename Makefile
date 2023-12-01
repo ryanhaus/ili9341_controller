@@ -20,17 +20,17 @@ dependencies/pico-sdk:
 
 # for building verilog files w/ verilator for simulation
 # note that bitstream files have to be generated through xilinx vivado software
-verilator: verilator_sim/obj_dir/Vili9341_controller
+verilator: verilator_sim/obj_dir/Vili9341_verilator
 
 verilator_run: verilator
-	./verilator_sim/obj_dir/Vili9341_controller
+	./verilator_sim/obj_dir/Vili9341_verilator
 
-verilator_sim/obj_dir/Vili9341_controller: verilator_sim/obj_dir/ili9341_controller.mk
-	cd verilator_sim && make -C obj_dir -f Vili9341_controller.mk Vili9341_controller
+verilator_sim/obj_dir/Vili9341_verilator: verilator_sim/obj_dir/Vili9341_verilator.mk fpga/ili9341_controller.srcs/sources_1/new/*.v fpga/ili9341_controller.srcs/sim_1/new/*.sv verilator_sim/*.c
+	cd verilator_sim && make -C obj_dir -f Vili9341_verilator.mk Vili9341_verilator
 
-verilator_sim/obj_dir/ili9341_controller.mk: fpga/ili9341_controller.srcs/sources_1/new/*.v
-	cd fpga/ili9341_controller.srcs/sources_1/new && \
-	verilator ili9341_controller.v --cc -Mdir $(shell pwd)/verilator_sim/obj_dir -Wno-WIDTH --exe main_sim.c \
+verilator_sim/obj_dir/Vili9341_verilator.mk: fpga/ili9341_controller.srcs/sources_1/new/*.v fpga/ili9341_controller.srcs/sim_1/new/*.sv verilator_sim/*.c
+	cd fpga/ili9341_controller.srcs/sim_1/new && \
+	verilator ili9341_verilator.sv -I$(shell pwd)/fpga/ili9341_controller.srcs/sources_1/new --cc -Mdir $(shell pwd)/verilator_sim/obj_dir -Wno-WIDTH --exe main_sim.c -sv --trace \
 		-CFLAGS "$(shell sdl2-config --cflags)" -LDFLAGS "$(shell sdl2-config --libs)"
 
 # cleaning

@@ -1,7 +1,9 @@
-#include <iostream>
+#include <stdio.h>
+#include <stdlib.h>
 #include <verilated.h>
 #include <SDL.h>
-#include "Vili9341_controller.h"
+#include "Vili9341_verilator.h"
+#include "verilated_vcd_c.h"
 
 #define WINDOW_SCALE 2
 
@@ -17,20 +19,22 @@ struct Pixel {
 
 Pixel framebuffer[320 * 240];
 
-void memory_tick(Vili9341_controller* top, uint8_t* sram) {
-    if (top->memory_read) {
-        top->memory_data = sram[top->memory_addr];
-    } else if (top->memory_write) {
-        sram[top->memory_addr] = top->memory_data;
-    }
-    
+uint8_t VERILATOR_TRACE = 0;
+
+// for tracing
+void tick(Vili9341_verilator* top, VerilatedVcdC* m_trace, uint64_t* tick_counter) {
     top->eval();
+    
+    if (VERILATOR_TRACE)
+        m_trace->dump((*tick_counter)++);
 }
 
-int main() {
+int main(int argc, char** argv) {
+    VERILATOR_TRACE = (argc > 1 && strcmp("--trace", argv[1]) == 0);
+
     // initialize SDL for video
     if(SDL_Init(SDL_INIT_VIDEO) < 0) {
-        std::cout << "Could not initialize SDL: " << SDL_GetError() << std::endl;
+        printf("Could not initialize SDL: %s\n", SDL_GetError());
         return 1;
     }
 
@@ -40,7 +44,7 @@ int main() {
     SDL_Window* window = SDL_CreateWindow("ILI9341 Controller", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, 240 * WINDOW_SCALE, 320 * WINDOW_SCALE, SDL_WINDOW_SHOWN);
 
     if (!window) {
-        std::cout << "Could not create window: " << SDL_GetError() << std::endl;
+        printf("Could not craete window: %s\n", SDL_GetError());
         return 1;
     }
 
@@ -50,7 +54,7 @@ int main() {
     SDL_Renderer* renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
 
     if (!renderer) {
-        std::cout << "Could not create renderer: " << SDL_GetError() << std::endl;
+        printf("Could not craete renderer: %s\n", SDL_GetError());
         return 1;
     }
 
@@ -60,27 +64,44 @@ int main() {
     SDL_Texture* texture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_TARGET, 240, 320);
 
     if (!texture) {
-        std::cout << "Could not create texture: " << SDL_GetError() << std::endl;
+        printf("Could not craete texture: %s\n", SDL_GetError());
         return 1;
     }
 
 
 
     // create verilator instance of the ILI9341 controller
-    Vili9341_controller *top = new Vili9341_controller;
+    Vili9341_verilator *top = new Vili9341_verilator;
+    
+    // for tracing
+    VerilatedVcdC* m_trace = new VerilatedVcdC;
+    Verilated::traceEverOn(1);
+    uint64_t tick_counter = 0;
 
-    top->reset = 0;
-    top->enable = 1;
+    top->trace(m_trace, 99);
+    m_trace->open("trace.vcd");
 
     uint8_t red = 0;
 
+    srand(time(NULL));
+
     // main loop
     int frame_counter = 0;
-    uint8_t sram[0b10000000000000000];
 
-    memset(sram, 0xFF, sizeof(sram));
+    for (int x = 0; x < 1023; x++) {
+        for (int i = 0; i < 24; i++) {
+            top->spi_sck = 0;
+            top->spi_sda = rand() & 1;
+            tick(top, m_trace, &tick_counter);
 
-    while (true) {
+
+            
+            top->spi_sck = 1;
+            tick(top, m_trace, &tick_counter);
+        }
+    }
+
+    do {
         // close window if X is pressed
         SDL_Event e;
         if (SDL_PollEvent(&e)) {
@@ -94,9 +115,9 @@ int main() {
         while (!top->tft_vsync) {
             // cycle clock
             top->tft_dotclk = 0;
-            top->eval();
+            tick(top, m_trace, &tick_counter);
             top->tft_dotclk = 1;
-            top->eval();
+            tick(top, m_trace, &tick_counter);
         }
 
         unsigned int transfer_count = 0;
@@ -106,11 +127,9 @@ int main() {
         while (top->tft_vsync) {
             // cycle clock
             top->tft_dotclk = 0;
-            top->eval();
+            tick(top, m_trace, &tick_counter);
             top->tft_dotclk = 1;
-            top->eval();
-
-            memory_tick(top, sram);
+            tick(top, m_trace, &tick_counter);
 
             // if data enable is high, start sending data to the framebuffer
             if (top->tft_data_enable) {
@@ -134,23 +153,7 @@ int main() {
         SDL_RenderClear(renderer);
         SDL_RenderCopyEx(renderer, texture, NULL, NULL, 0, NULL, SDL_FLIP_HORIZONTAL);
         SDL_RenderPresent(renderer);
-
-
-
-        for (int x = 0; x < 50; x++) {
-            for (int i = 0; i < 24; i++) {
-                top->spi_sck = 0;
-                top->spi_sda = rand() & 1;
-
-                top->eval();
-                
-                top->spi_sck = 1;
-                top->eval();
-            }
-
-            memory_tick(top, sram);
-        }
-    }
+    } while(!VERILATOR_TRACE);
 
     // free resources
     top->final();
@@ -158,6 +161,9 @@ int main() {
     SDL_DestroyRenderer(renderer);
     SDL_DestroyWindow(window);
     SDL_Quit();
+
+    // for tracing
+    m_trace->close();
 
     return 0;
 }

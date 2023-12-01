@@ -45,6 +45,8 @@ module ili9341_controller(
     assign memory_read = tft_next_display_x_on_screen;
     
     spi_video_memory_controller memory_controller_inst(
+        .clk(tft_dotclk),
+        .reset(reset),
         .spi_sck(spi_sck),
         .spi_sda(spi_sda),
         .display_x(tft_next_display_x),

@@ -6,6 +6,9 @@ module spi_video_memory_controller #(
     parameter WIDTH_BITS = $clog2(DISPLAY_WIDTH),
     parameter HEIGHT_BITS = $clog2(DISPLAY_HEIGHT)
 ) (
+    input clk,
+    input reset,
+
     input spi_sck,
     input spi_sda,
 
@@ -14,14 +17,15 @@ module spi_video_memory_controller #(
 
     input memory_read,
     
-    output reg [15:0] memory_addr,
+    output [15:0] memory_addr,
     inout [7:0] memory_data,
-    output reg memory_write
+    output memory_write
 );
-    // NOTE: currently, this relies on the memory being written when the memory is not in use (i.e., not in an active frame period)
-    // TODO: use a FIFO system to allow SPI data to be transferred during a reading period and written after that period is done    
+    reg memory_write_en = 0;
+    assign memory_write = memory_write_en && clk;
+    
     reg [7:0] memory_data_reg;
-    assign memory_data = memory_write ? memory_data_reg : 8'hz;
+    assign memory_data = memory_write_en ? memory_data_reg : 8'hz;
     
     wire [23:0] spi_data;
     wire spi_data_ready;
@@ -37,6 +41,28 @@ module spi_video_memory_controller #(
     
     
     
+    // pixel FIFO--allows SPI transfer during read period
+    wire fifo_empty;
+    wire [23:0] fifo_dout;
+    reg fifo_rd_en = 0;
+    wire fifo_full;
+    wire fifo_almost_full;
+    
+    register_fifo #(
+        .BITS(24),
+        .DEPTH(1024)
+    ) pixel_fifo_inst (
+        .read_clk(clk && fifo_rd_en),
+        .read_data(fifo_dout),
+        .write_clk(spi_data_ready),
+        .write_data(spi_data),
+        .empty(fifo_empty),
+        .full(fifo_full),
+        .almost_full(fifo_almost_full)
+    );
+    
+    
+    
     // split up the spi data into a 16-bit memory address and an 8-bit data to write
     wire [15:0] write_addr;
     wire [7:0] write_data;
@@ -46,17 +72,33 @@ module spi_video_memory_controller #(
     
     
     
-    // write that data when it's ready, ignore if currently in a reading period
+    // memory control
+    reg [15:0] memory_addr_read;
+    reg [15:0] memory_addr_write;
+    assign memory_addr = memory_read ? memory_addr_read : memory_addr_write;
+    
     always @(*) begin
-        memory_write = 0;
-        
-        if (memory_read) begin
-            memory_addr = display_x + display_y * DISPLAY_WIDTH;
-        end else
-            if (spi_data_ready) begin
-                memory_addr = write_addr;
-                memory_data_reg = write_data;
-                memory_write = 1;
+        // if we're reading, then set the memory address to the appropriate value
+        if (memory_read)
+            memory_addr_read = display_x + display_y * DISPLAY_WIDTH;
+    end
+    
+    
+    
+    always @(posedge clk) begin
+        // if there's data in the FIFO, process it
+        if (!fifo_empty) begin
+            // if we're not currently reading from the memory, it's okay to write to it
+            if (!memory_read) begin
+                fifo_rd_en = 1;
+                memory_addr_write = fifo_dout[23:8];
+                memory_data_reg = fifo_dout[7:0];
+                memory_write_en = 1;
             end
+        end else begin
+            // if no FIFO data, then don't attempt to write to memory or read from FIFO
+            fifo_rd_en = 0;
+            memory_write_en = 0;
+        end
     end
 endmodule

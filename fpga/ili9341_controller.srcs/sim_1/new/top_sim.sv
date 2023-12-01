@@ -1,10 +1,12 @@
-`timescale 1ns / 1ps
+`timescale 1ns/1ps
 
 module top_sim();
     reg sysclk;
     initial sysclk = 0;
     always #42 sysclk = ~sysclk; // close enough to 12MHz
    
+    reg reset;
+    initial reset = 0;
     
     reg spi_sck;
     reg spi_sda;
@@ -15,12 +17,13 @@ module top_sim();
     wire [5:0] tft_data;
     wire [18:0] memory_addr;
     wire [7:0] memory_data;
-    wire memory_read;
-    wire memory_write;
-    wire memory_enable;
+    wire RamOEn;
+    wire RamWEn;
+    wire RamCEn;
     
     top top_inst(
         .sysclk(sysclk),
+        .reset(reset),
         .spi_sck(spi_sck),
         .spi_sda(spi_sda),
         .tft_dotclk(tft_dotclk),
@@ -30,22 +33,48 @@ module top_sim();
         .tft_data(tft_data),
         .MemAdr(memory_addr),
         .MemDB(memory_data),
-        .RamOEn(memory_read),
-        .RamWEn(memory_write),
-        .RamCEn(memory_enable)
+        .RamOEn(RamOEn),
+        .RamWEn(RamWEn),
+        .RamCEn(RamCEn)
+    );
+    
+    
+    
+    wire memory_read;
+    wire memory_write;
+    wire memory_enable;
+    assign memory_read = ~RamOEn;
+    assign memory_write = ~RamWEn;
+    assign memory_enable = ~RamCEn;
+    
+    
+    
+    sim_sram #(
+        .ADDR_BITS(16) // TODO: change to allow sim to access all 18 bits
+    ) sim_sram_inst (
+        .mem_addr(memory_addr[15:0]),
+        .mem_data(memory_data),
+        .mem_read(memory_read),
+        .mem_write(memory_write)
     );
     
     
     
     initial begin
         integer i;
+        integer j;
+        integer random_value;
         
-        for (i = 0; i < 24; i = i + 1) begin
-            #20
-            spi_sda <= (i < 8) || (i >= 20);
-            spi_sck <= 0;
-            #20
-            spi_sck <= 1;
+        for (j = 0; j < 500; j = j + 1) begin
+            random_value = $random();
+            
+            for (i = 0; i < 24; i = i + 1) begin
+                #20
+                spi_sda <= i < 16 ? j[15 - i] : random_value[i];
+                spi_sck <= 0;
+                #20
+                spi_sck <= 1;
+            end
         end
     end
 endmodule

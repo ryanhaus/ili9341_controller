@@ -1,5 +1,6 @@
 module top(
     input sysclk,
+    input reset,
     
     input spi_sck,
     input spi_sda,
@@ -18,7 +19,7 @@ module top(
 );
     // convert 12MHz input clock into 16.5312MHz dotclk (leads to an approx 60Hz vsync, assuming 3 clks/pixel, 328x280 pixels)
     tft_clk_wiz tft_clk_wiz_inst(
-        .reset(1'b0),
+        .reset(reset),
         .clk_in1(sysclk),
         .clk_out1(tft_dotclk)
     );
@@ -30,7 +31,7 @@ module top(
     wire memory_write;
     
     ili9341_controller ili9341_controller_inst (
-        .reset(1'b0),
+        .reset(reset),
         .enable(1'b1),
         .spi_sck(spi_sck),
         .spi_sda(spi_sda),

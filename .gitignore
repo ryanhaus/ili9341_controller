@@ -6,6 +6,7 @@ pico/build/*
 
 # verilator
 verilator_sim/obj_dir
+*.vcd
 
 # vivado
 fpga/*
