@@ -4,6 +4,7 @@ module top(
     
     input spi_sck,
     input spi_sda,
+    output spi_ready,
     
     output tft_dotclk,
     output tft_hsync,
@@ -35,6 +36,7 @@ module top(
         .enable(1'b1),
         .spi_sck(spi_sck),
         .spi_sda(spi_sda),
+        .spi_ready(spi_ready),
         .tft_dotclk(tft_dotclk),
         .tft_hsync(tft_hsync),
         .tft_vsync(tft_vsync),

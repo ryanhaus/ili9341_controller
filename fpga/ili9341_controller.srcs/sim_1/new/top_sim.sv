@@ -10,6 +10,7 @@ module top_sim();
     
     reg spi_sck;
     reg spi_sda;
+    wire spi_ready;
     wire tft_dotclk;
     wire tft_hsync;
     wire tft_vsync;
@@ -26,6 +27,7 @@ module top_sim();
         .reset(reset),
         .spi_sck(spi_sck),
         .spi_sda(spi_sda),
+        .spi_ready(spi_ready),
         .tft_dotclk(tft_dotclk),
         .tft_hsync(tft_hsync),
         .tft_vsync(tft_vsync),
@@ -60,21 +62,20 @@ module top_sim();
     
     
     
-    initial begin
-        integer i;
-        integer j;
-        integer random_value;
-        
-        for (j = 0; j < 500; j = j + 1) begin
-            random_value = $random();
-            
+    integer i;
+    integer j = 0;
+    
+    always begin        
+        if (spi_ready) begin
             for (i = 0; i < 24; i = i + 1) begin
-                #20
-                spi_sda <= i < 16 ? j[15 - i] : random_value[i];
+                #2
+                spi_sda <= i < 16 ? j[15 - i] : j[23 - i];
                 spi_sck <= 0;
-                #20
+                #2
                 spi_sck <= 1;
             end
-        end
+            
+            j = j + 1;
+        end else #10 i=i;
     end
 endmodule

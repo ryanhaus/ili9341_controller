@@ -25,6 +25,9 @@ verilator: verilator_sim/obj_dir/Vili9341_verilator
 verilator_run: verilator
 	./verilator_sim/obj_dir/Vili9341_verilator
 
+verilator_run_trace: verilator
+	./verilator_sim/obj_dir/Vili9341_verilator --trace
+
 verilator_sim/obj_dir/Vili9341_verilator: verilator_sim/obj_dir/Vili9341_verilator.mk fpga/ili9341_controller.srcs/sources_1/new/*.v fpga/ili9341_controller.srcs/sim_1/new/*.sv verilator_sim/*.c
 	cd verilator_sim && make -C obj_dir -f Vili9341_verilator.mk Vili9341_verilator
 

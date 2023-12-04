@@ -35,7 +35,10 @@ module display_handler #(
     output [DISPLAY_HEIGHT_BITS-1 : 0] display_y,
     
     output [DISPLAY_WIDTH_BITS-1 : 0] next_display_x,
-    output next_display_x_on_screen
+    output [DISPLAY_WIDTH_BITS-1 : 0] next_next_display_x,
+    
+    output next_display_x_on_screen,
+    output next_next_display_x_on_screen
 );
     // calculate total scan width and heights, including sync periods, front/back porches, and display areas
     localparam TOTAL_WIDTH = HSYNC_WIDTH + HBP_WIDTH + DISPLAY_WIDTH + HFP_WIDTH;
@@ -128,6 +131,8 @@ module display_handler #(
     assign display_x = tft_x - (HSYNC_WIDTH + HBP_WIDTH);
     assign display_y = tft_y - (VSYNC_HEIGHT + VBP_HEIGHT);
     
+    
+    
     // determine where the next pixel will be, as well as if it's going to be in the display
     assign next_display_x = display_x + 1;
     
@@ -145,6 +150,28 @@ module display_handler #(
         .sync(),
         .back_porch(),
         .display(next_x_in_horiz_display),
+        .front_porch()
+    );
+    
+    
+    
+    // determine where the pixel after the next will be, as well as if it's going to be on the display
+    assign next_next_display_x = display_x + 2;
+    
+    wire next_next_x_in_horiz_display;
+    assign next_next_display_x_on_screen = next_next_x_in_horiz_display && in_vert_display;
+    
+    display_region_handler #(
+        .SYNC_SIZE(HSYNC_WIDTH),
+        .BP_SIZE(HBP_WIDTH),
+        .DISPLAY_SIZE(DISPLAY_WIDTH),
+        .FP_SIZE(HFP_WIDTH)
+    ) next_next_horizontal_region_handler_inst (
+        .clk(dotclk),
+        .position(tft_x + 2),
+        .sync(),
+        .back_porch(),
+        .display(next_next_x_in_horiz_display),
         .front_porch()
     );
 endmodule

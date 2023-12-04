@@ -1,6 +1,7 @@
 module ili9341_verilator(
     input spi_sck,
     input spi_sda,
+    output spi_ready,
     input tft_dotclk,
     output tft_hsync,
     output tft_vsync,
@@ -20,6 +21,7 @@ module ili9341_verilator(
         .enable(1'b1),
         .spi_sck(spi_sck),
         .spi_sda(spi_sda),
+        .spi_ready(spi_ready),
         .tft_dotclk(tft_dotclk),
         .tft_hsync(tft_hsync),
         .tft_vsync(tft_vsync),

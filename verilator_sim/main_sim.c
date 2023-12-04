@@ -31,6 +31,9 @@ void tick(Vili9341_verilator* top, VerilatedVcdC* m_trace, uint64_t* tick_counte
 
 int main(int argc, char** argv) {
     VERILATOR_TRACE = (argc > 1 && strcmp("--trace", argv[1]) == 0);
+    if (VERILATOR_TRACE) {
+        printf("Running in trace mode, will be saved to trace.vcd\nTo view, use gtkwave trace.vcd\n");
+    }
 
     // initialize SDL for video
     if(SDL_Init(SDL_INIT_VIDEO) < 0) {

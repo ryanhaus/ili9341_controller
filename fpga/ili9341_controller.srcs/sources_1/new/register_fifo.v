@@ -17,13 +17,16 @@ module register_fifo #(
     reg [$clog2(DEPTH)-1 : 0] read_addr = 0;
     reg [$clog2(DEPTH)-1 : 0] write_addr = 0;
     
+    wire [$clog2(DEPTH)-1 : 0] next_write_addr = write_addr + 1;
+    wire [$clog2(DEPTH)-1 : 0] next_next_write_addr = write_addr + 2;
+    
     // teh actual memory stored by the FIFO
     reg [BITS-1 : 0] memory [DEPTH-1 : 0];
  
     // status flags   
     assign empty = (write_addr == read_addr);
-    assign full = (write_addr + 1 == read_addr);
-    assign almost_full = (write_addr + 2 == read_addr);
+    assign full = (next_write_addr == read_addr);
+    assign almost_full = (next_next_write_addr == read_addr);
     
     always @(*) begin
         // reading data is asynchronous 
@@ -37,9 +40,9 @@ module register_fifo #(
         end
     end
 
-    // when requested to write, write if not empty
+    // when requested to write, write if not full
     always @(posedge write_clk) begin
-        if (!full && !almost_full) begin
+        if (!full) begin
             memory[write_addr] = write_data;
             write_addr = write_addr + 1;
         end

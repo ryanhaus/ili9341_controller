@@ -24,6 +24,8 @@ int main() {
     }
 
     while (1) {
+        while (!fpga_read_spi_ready()) {}
+
         fpga_write_data((uint8_t[]) { i >> 8, i & 0xFF, i % 240 }, 3);
         i++;
     }

@@ -11,11 +11,13 @@ module spi_video_memory_controller #(
 
     input spi_sck,
     input spi_sda,
+    output spi_ready,
 
     input [WIDTH_BITS-1 : 0] display_x,
     input [HEIGHT_BITS-1 : 0] display_y,
 
     input memory_read,
+    input memory_write_allowed,
     
     output [15:0] memory_addr,
     inout [7:0] memory_data,
@@ -47,10 +49,11 @@ module spi_video_memory_controller #(
     reg fifo_rd_en = 0;
     wire fifo_full;
     wire fifo_almost_full;
+    assign spi_ready = ~(fifo_almost_full || fifo_full); // tells the microprocessor when data is ready
     
     register_fifo #(
         .BITS(24),
-        .DEPTH(1024)
+        .DEPTH(256)
     ) pixel_fifo_inst (
         .read_clk(clk && fifo_rd_en),
         .read_data(fifo_dout),
@@ -88,8 +91,7 @@ module spi_video_memory_controller #(
     always @(posedge clk) begin
         // if there's data in the FIFO, process it
         if (!fifo_empty) begin
-            // if we're not currently reading from the memory, it's okay to write to it
-            if (!memory_read) begin
+            if (memory_write_allowed) begin
                 fifo_rd_en = 1;
                 memory_addr_write = fifo_dout[23:8];
                 memory_data_reg = fifo_dout[7:0];

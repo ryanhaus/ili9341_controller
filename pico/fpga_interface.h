@@ -5,6 +5,7 @@
 #define FPGA_TFT_VSYNC_PIN 12
 #define FPGA_TFT_DATA_ENABLE_PIN 13
 
+#define FPGA_SPI_READY_PIN 9
 #define FPGA_SCK_PIN 10
 #define FGPA_SDA_PIN 11
 
@@ -14,12 +15,14 @@
 
 
 void fpga_init() {
-    // initialize vsync and data enable pins as inputs
+    // initialize vsync, data enable, and spi ready pins as inputs
     gpio_init(FPGA_TFT_VSYNC_PIN);
     gpio_init(FPGA_TFT_DATA_ENABLE_PIN);
+    gpio_init(FPGA_SPI_READY_PIN);
 
     gpio_set_dir(FPGA_TFT_VSYNC_PIN, GPIO_IN);
     gpio_set_dir(FPGA_TFT_DATA_ENABLE_PIN, GPIO_IN);
+    gpio_set_dir(FPGA_SPI_READY_PIN, GPIO_IN);
 
 
 
@@ -52,7 +55,12 @@ uint8_t fpga_read_vsync() {
 
 
 
-
 uint8_t fpga_read_data_enable() {
     return gpio_get(FPGA_TFT_DATA_ENABLE_PIN);
+}
+
+
+
+uint8_t fpga_read_spi_ready() {
+    return gpio_get(FPGA_SPI_READY_PIN);
 }
