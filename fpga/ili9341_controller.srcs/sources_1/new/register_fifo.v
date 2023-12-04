@@ -39,7 +39,7 @@ module register_fifo #(
 
     // when requested to write, write if not empty
     always @(posedge write_clk) begin
-        if (!full) begin
+        if (!full && !almost_full) begin
             memory[write_addr] = write_data;
             write_addr = write_addr + 1;
         end

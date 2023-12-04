@@ -14,17 +14,17 @@ int main() {
     
     uint16_t i = 0;
 
-    while (1) {
+    for (int frame = 0; frame < 10; frame++) {
         while (!fpga_read_vsync()) {
             asm("nop");
         }
         while(fpga_read_vsync()) {
             asm("nop");
         }
+    }
 
-        for (int a = 0; a < 100; a++)
-            fpga_write_data((uint8_t[]) { rand(), rand(), rand() }, 3);
-        //fpga_write_data((uint8_t[]) { i >> 8, i & 0xFF, i % 240 }, 3);
-        //i++;
+    while (1) {
+        fpga_write_data((uint8_t[]) { i >> 8, i & 0xFF, i % 240 }, 3);
+        i++;
     }
 }

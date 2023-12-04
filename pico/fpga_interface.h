@@ -8,7 +8,7 @@
 #define FPGA_SCK_PIN 10
 #define FGPA_SDA_PIN 11
 
-#define FPGA_SPI_FREQ 25000000
+#define FPGA_SPI_FREQ 62500000
 #define FPGA_SPI_PORT spi1
 
 
