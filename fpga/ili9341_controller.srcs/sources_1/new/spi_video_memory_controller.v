@@ -89,7 +89,11 @@ module spi_video_memory_controller #(
     
     
     always @(posedge clk) begin
-        // if there's data in the FIFO, process it
+        // by default, we don't want to read from the FIFO or write to the memory
+        fifo_rd_en = 0;
+        memory_write_en = 0;
+    
+        // unless if there's data in the FIFO, then process it by reading from the FIFO and writing to memory
         if (!fifo_empty) begin
             if (memory_write_allowed) begin
                 fifo_rd_en = 1;
@@ -97,10 +101,6 @@ module spi_video_memory_controller #(
                 memory_data_reg = fifo_dout[7:0];
                 memory_write_en = 1;
             end
-        end else begin
-            // if no FIFO data, then don't attempt to write to memory or read from FIFO
-            fifo_rd_en = 0;
-            memory_write_en = 0;
         end
     end
 endmodule

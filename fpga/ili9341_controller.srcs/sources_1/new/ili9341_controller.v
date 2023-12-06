@@ -47,6 +47,7 @@ module ili9341_controller(
     
     // test: spi memory writing, memory reading for display 
     assign memory_read = tft_next_display_x_on_screen;
+    wire memory_write_allowed = !(tft_data_enable || tft_next_display_x_on_screen || tft_next_next_display_x_on_screen);
     
     spi_video_memory_controller memory_controller_inst(
         .clk(tft_dotclk),
@@ -57,7 +58,7 @@ module ili9341_controller(
         .display_x(tft_next_display_x),
         .display_y(tft_display_y),
         .memory_read(tft_next_display_x_on_screen),
-        .memory_write_allowed(!tft_next_next_display_x_on_screen),
+        .memory_write_allowed(memory_write_allowed),
         .memory_addr(memory_addr),
         .memory_data(memory_data),
         .memory_write(memory_write)
@@ -76,15 +77,13 @@ module ili9341_controller(
     
     always @(posedge tft_dotclk) begin
         if (dotclk_count == 0) begin
-            if (tft_data_enable) begin
-                red <= next_red;
-                green <= next_green;
-                blue <= next_blue;
-            end
-        
+            red <= next_red;
+            green <= next_green;
+            blue <= next_blue;
+            
             next_red <= memory_read ? memory_data : 0;
-            next_green <= memory_read ? memory_data : 0;
-            next_blue <= memory_read ? memory_data : 0;
+            next_green <= 0;//memory_read ? memory_data : 0;
+            next_blue <= 0;//memory_read ? memory_data : 0;
         end
     end
     
