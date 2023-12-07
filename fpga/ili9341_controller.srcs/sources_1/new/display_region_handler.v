@@ -16,7 +16,7 @@ module display_region_handler #(
     output reg display = 0,
     output reg front_porch = 0
 );
-    always @(*) begin
+    always @(posedge clk) begin
         /* verilator lint_off UNSIGNED */
         sync =          (position >= 0 && position < SYNC_SIZE);
         back_porch =    (position >= SYNC_SIZE && position < SYNC_SIZE + BP_SIZE);

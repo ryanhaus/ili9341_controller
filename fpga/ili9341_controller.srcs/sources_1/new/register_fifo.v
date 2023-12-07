@@ -20,7 +20,7 @@ module register_fifo #(
     wire [$clog2(DEPTH)-1 : 0] next_write_addr = write_addr + 1;
     wire [$clog2(DEPTH)-1 : 0] next_next_write_addr = write_addr + 2;
     
-    // teh actual memory stored by the FIFO
+    // the actual memory stored by the FIFO
     reg [BITS-1 : 0] memory [DEPTH-1 : 0];
  
     // status flags   
@@ -28,13 +28,10 @@ module register_fifo #(
     assign full = (next_write_addr == read_addr);
     assign almost_full = (next_next_write_addr == read_addr);
     
-    always @(*) begin
-        // reading data is asynchronous 
-        read_data = memory[read_addr];
-    end
-    
     // when requested to read, read if not empty
     always @(posedge read_clk) begin
+        read_data = memory[read_addr];
+        
         if (!empty) begin            
             read_addr = read_addr + 1;
         end

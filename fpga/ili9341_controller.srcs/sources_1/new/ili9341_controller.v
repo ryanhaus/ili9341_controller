@@ -25,7 +25,6 @@ module ili9341_controller(
     wire [1:0] dotclk_count;
     wire [$clog2(240)-1 : 0] tft_next_display_x;
     wire tft_next_display_x_on_screen;
-    wire tft_next_next_display_x_on_screen;
     
     display_handler display_handler_inst (
         .reset(reset),
@@ -38,19 +37,18 @@ module ili9341_controller(
         .display_x(tft_display_x),
         .display_y(tft_display_y),
         .next_display_x(tft_next_display_x),
-        .next_next_display_x(),
-        .next_display_x_on_screen(tft_next_display_x_on_screen),
-        .next_next_display_x_on_screen(tft_next_next_display_x_on_screen)
+        .next_display_x_on_screen(tft_next_display_x_on_screen)
     );
     
     
     
     // test: spi memory writing, memory reading for display 
     assign memory_read = tft_data_enable;
-    wire memory_write_allowed = !(tft_data_enable || tft_next_display_x_on_screen || tft_next_next_display_x_on_screen);
+    wire memory_write_allowed = !(tft_data_enable || tft_next_display_x_on_screen);
     
     spi_video_memory_controller memory_controller_inst(
-        .clk(tft_dotclk),
+        .read_clk(tft_dotclk),
+        .write_clk(tft_dotclk),
         .reset(reset),
         .spi_sck(spi_sck),
         .spi_sda(spi_sda),
@@ -75,15 +73,16 @@ module ili9341_controller(
     reg [5:0] next_green;
     reg [5:0] next_blue;
     
-    always @(*) begin
+    always @(posedge tft_dotclk) begin
         if (dotclk_count == 0) begin
-            red = memory_read ? memory_data : 8'hXX;
+            red = memory_read ? memory_data : 8'hFF;
             green = 0;
             blue = 0;
         end
     end
     
     color_mux color_mux_inst(
+        .clk(tft_dotclk),
         .enable(tft_data_enable),
         .selector(dotclk_count),
         .red(red),

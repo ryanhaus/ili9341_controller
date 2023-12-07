@@ -6,7 +6,8 @@ module spi_video_memory_controller #(
     parameter WIDTH_BITS = $clog2(DISPLAY_WIDTH),
     parameter HEIGHT_BITS = $clog2(DISPLAY_HEIGHT)
 ) (
-    input clk,
+    input read_clk,
+    input write_clk,
     input reset,
 
     input spi_sck,
@@ -54,7 +55,7 @@ module spi_video_memory_controller #(
         .BITS(24),
         .DEPTH(32)
     ) pixel_fifo_inst (
-        .read_clk(clk && fifo_rd_en),
+        .read_clk(read_clk && fifo_rd_en),
         .read_data(fifo_dout),
         .write_clk(spi_data_ready),
         .write_data(spi_data),
@@ -79,7 +80,7 @@ module spi_video_memory_controller #(
     reg [15:0] memory_addr_write;
     assign memory_addr = memory_read ? memory_addr_read : memory_addr_write;
     
-    always @(*) begin
+    always @(posedge read_clk) begin
         // if we're reading, then set the memory address to the appropriate value
         if (memory_read)
             memory_addr_read = display_x + display_y * DISPLAY_WIDTH;
@@ -87,7 +88,7 @@ module spi_video_memory_controller #(
     
     
     
-    always @(posedge clk) begin
+    always @(posedge write_clk) begin
         // by default, we don't want to read from the FIFO or write to the memory
         fifo_rd_en = 0;
         

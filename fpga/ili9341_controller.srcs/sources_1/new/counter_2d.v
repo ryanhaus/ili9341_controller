@@ -13,7 +13,7 @@ module counter_2d #(
     output [X_MODULUS_BITS-1 : 0] out_x,
     output [Y_MODULUS_BITS-1 : 0] out_y
 );
-    wire last_tick_x;
+    wire overflow_x;
 
     counter #(
         .MODULUS(X_MODULUS)
@@ -22,16 +22,16 @@ module counter_2d #(
         .enable(enable),
         .clk(clk),
         .out(out_x),
-        .last_tick(last_tick_x)
+        .overflow(overflow_x)
     );
     
     counter #(
         .MODULUS(Y_MODULUS)
     ) y_counter (
         .reset(reset),
-        .enable(enable && last_tick_x),
+        .enable(enable && overflow_x),
         .clk(clk),
         .out(out_y),
-        .last_tick()
+        .overflow()
     );
 endmodule

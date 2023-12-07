@@ -3,6 +3,7 @@ module color_mux #(
     parameter BITS_DATA = 6
 )
 (
+    input clk,
     input enable,
     input [1:0] selector,
     input [BITS_DATA-1 : 0] red,
@@ -10,7 +11,7 @@ module color_mux #(
     input [BITS_DATA-1 : 0] blue,
     output reg [BITS_DATA-1 : 0] data
 );
-    always @(*) begin
+    always @(posedge clk) begin
         if (enable)
             case (selector)
                 2'd0: data = blue;
