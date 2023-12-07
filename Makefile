@@ -28,15 +28,15 @@ verilator_run: verilator
 verilator_run_trace: verilator
 	./verilator_sim/obj_dir/Vili9341_verilator --trace
 
-verilator_sim/obj_dir/Vili9341_verilator: fpga/ili9341_controller.srcs/sources_1/new/*.v fpga/ili9341_controller.srcs/sim_1/new/*.sv verilator_sim/*.c
+verilator_sim/obj_dir/Vili9341_verilator: fpga/ili9341_controller.srcs/sources_1/new/*.v fpga/ili9341_controller.srcs/sim_1/new/*.sv verilator_sim/*.cpp
 	cd verilator_sim && \
 	verilator --cc --exe --build --trace \
-	main.c \
+	main.cpp \
 	$(shell pwd)/fpga/ili9341_controller.srcs/sim_1/new/ili9341_verilator.sv \
 	-I$(shell pwd)/fpga/ili9341_controller.srcs/sim_1/new \
 	-I$(shell pwd)/fpga/ili9341_controller.srcs/sources_1/new \
 	-Wno-width \
-	-CFLAGS "$(shell sdl2-config --cflags) -Wall" -LDFLAGS "$(shell sdl2-config --libs)"
+	-CFLAGS "$(shell sdl2-config --cflags) -g -Wall" -LDFLAGS "$(shell sdl2-config --libs)"
 
 # cleaning
 clean: clean_pico clean_verilator

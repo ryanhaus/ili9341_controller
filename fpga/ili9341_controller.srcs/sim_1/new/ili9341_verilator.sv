@@ -12,7 +12,6 @@ module ili9341_verilator(
     wire [7:0] memory_data;
     wire memory_read;
     wire memory_write;
-    wire memory_enable;
     
     assign memory_addr[18:16] = 0;
     
@@ -38,6 +37,7 @@ module ili9341_verilator(
     sim_sram #(
         .ADDR_BITS(16) // TODO: change to allow sim to access all 18 bits
     ) sim_sram_inst (
+        .clk(spi_sck),
         .mem_addr(memory_addr[15:0]),
         .mem_data(memory_data),
         .mem_read(memory_read),

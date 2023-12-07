@@ -21,13 +21,12 @@ module spi_video_memory_controller #(
     
     output [15:0] memory_addr,
     inout [7:0] memory_data,
-    output memory_write
+    output reg memory_write
 );
     reg memory_write_en = 0;
-    assign memory_write = memory_write_en && clk;
     
     reg [7:0] memory_data_reg;
-    assign memory_data = memory_write_en ? memory_data_reg : 8'hz;
+    assign memory_data = memory_read ? 8'hz : memory_data_reg;
     
     wire [23:0] spi_data;
     wire spi_data_ready;
@@ -49,11 +48,11 @@ module spi_video_memory_controller #(
     reg fifo_rd_en = 0;
     wire fifo_full;
     wire fifo_almost_full;
-    assign spi_ready = ~(fifo_almost_full || fifo_full); // tells the microprocessor when data is ready
+    assign spi_ready = ~(fifo_almost_full || fifo_full); // tells the microprocessor when spi is ready for data
     
     register_fifo #(
         .BITS(24),
-        .DEPTH(256)
+        .DEPTH(32)
     ) pixel_fifo_inst (
         .read_clk(clk && fifo_rd_en),
         .read_data(fifo_dout),
@@ -91,15 +90,18 @@ module spi_video_memory_controller #(
     always @(posedge clk) begin
         // by default, we don't want to read from the FIFO or write to the memory
         fifo_rd_en = 0;
-        memory_write_en = 0;
-    
-        // unless if there's data in the FIFO, then process it by reading from the FIFO and writing to memory
-        if (!fifo_empty) begin
-            if (memory_write_allowed) begin
-                fifo_rd_en = 1;
-                memory_addr_write = fifo_dout[23:8];
-                memory_data_reg = fifo_dout[7:0];
-                memory_write_en = 1;
+        
+        if (memory_write == 1)
+            memory_write = 0;
+        else begin
+            // unless if there's data in the FIFO, then process it by reading from the FIFO and writing to memory
+            if (!fifo_empty) begin
+                if (memory_write_allowed) begin
+                    fifo_rd_en = 1;
+                    memory_addr_write = fifo_dout[23:8];
+                    memory_data_reg = fifo_dout[7:0];
+                    memory_write = 1;
+                end
             end
         end
     end

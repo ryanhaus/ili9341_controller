@@ -4,6 +4,8 @@ module sim_sram #(
     parameter DATA_BITS = 8,
     localparam MEM_SIZE = 2 ** ADDR_BITS
 ) (
+    input clk,
+
     // address and data buses
     input [ADDR_BITS-1 : 0] mem_addr,
     inout [DATA_BITS-1 : 0] mem_data,
@@ -15,19 +17,14 @@ module sim_sram #(
     // the actual memory contents of the chip
     reg [DATA_BITS-1 : 0] memory [MEM_SIZE-1 : 0];
     
+    // to keep track of when to write to memory
+    reg prev_mem_write = 0;
     
     
-    // handle what the data bus is being used for -- writing has priority
+    
+    // handle what the data bus is being used for
     reg [DATA_BITS-1 : 0] mem_data_reg;
-    reg mem_set_z = 0;
-    assign mem_data = mem_set_z ? { DATA_BITS { 1'bz }} : mem_data_reg;
-    
-    always @(mem_read or mem_write) begin
-        if (mem_write)
-            mem_set_z = 1;
-        else if (mem_read)
-            mem_set_z = 0;
-    end
+    assign mem_data = mem_read ? mem_data_reg : { DATA_BITS { 1'bz }};
     
     
     
@@ -39,7 +36,11 @@ module sim_sram #(
     
     
     // handle writing
-    always @(posedge mem_write) begin
-        memory[mem_addr] = mem_data;
+    always @(posedge clk) begin
+        if (prev_mem_write == 0 && mem_write == 1) begin
+            memory[mem_addr] = mem_data;
+        end
+        
+        prev_mem_write = mem_write;
     end
 endmodule

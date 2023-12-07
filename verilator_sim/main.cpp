@@ -74,10 +74,8 @@ bool clock_dotclk_tick(uint64_t time_ps) {
             int current_color = transfer_count % 3; // 0 = red, 1 = green, 2 = blue
 
             // write the current pixel to memory
-            if (pixel < 320 * 240) {
-                framebuffer[pixel].brightness = 0xFF;
-                framebuffer[pixel].colors[current_color] = top->tft_data << 2;
-            }
+            framebuffer[pixel].brightness = 0xFF;
+            framebuffer[pixel].colors[current_color] = top->tft_data << 2;
 
             // if all three colors have been sent, advance to next pixel
             if (transfer_count % 3 == 2) {
@@ -103,7 +101,7 @@ bool clock_dotclk_tick(uint64_t time_ps) {
 
             // if we're in trace mode, we only want to draw one frame
             if (VERILATOR_TRACE) {
-                printf("Frame completed, tracing finished\n");
+                printf("Tracing finished\n");
                 
                 // await window closing
                 while (sdl_tick()) {}
@@ -121,13 +119,38 @@ bool clock_dotclk_tick(uint64_t time_ps) {
 
 
 // handle sck tick
+uint16_t spi_transfer_count = 0;
+uint8_t spi_bit_counter = 0;
 bool clock_sck_tick(uint64_t time_ps) {
+    // if we can't send data, just do nothing
+    if (!top->spi_ready) {
+        return true;
+    }
+
     // toggle clock
     top->spi_sck = !top->spi_sck;
 
     // if clock is rising, set data too
     if (top->spi_sck == 1) {
-        top->spi_sda = rand()&1;
+        // figure out x and y position
+        uint16_t x = spi_transfer_count % 240,
+                 y = spi_transfer_count / 240;
+
+        // set data based on the bit counter, note that data is sent MSB first
+        if (spi_bit_counter < 16) { // 16 most significant bits are the address
+            top->spi_sda = (spi_transfer_count >> (15 - spi_bit_counter)) & 1;
+        } else { // 8 least significant bits are the data
+            top->spi_sda = (x >> (23 - spi_bit_counter)) & 1;
+        }
+
+        // increase spi bit counter
+        spi_bit_counter++;
+
+        // if we have completed the transfer, reset the bit counter and increase the transfer counter
+        if (spi_bit_counter == 24) {
+            spi_bit_counter = 0;
+            spi_transfer_count++;
+        }
     }
 
     // evaluate
@@ -203,7 +226,7 @@ int main(int argc, char** argv) {
 
     // set up clocks
     verilator_clock dotclk_clock = { clock_dotclk_tick, hz_to_half_period_ps(16531200) }; // 16.5312MHz dotclk
-    verilator_clock sck_clock = { clock_sck_tick, hz_to_half_period_ps(12000000) }; // 12MHz sck
+    verilator_clock sck_clock = { clock_sck_tick, hz_to_half_period_ps(62500000) }; // 62.5MHz sck
     verilator_clock clocks[] = { dotclk_clock, sck_clock };
 
     SDL_PollEvent(NULL);
