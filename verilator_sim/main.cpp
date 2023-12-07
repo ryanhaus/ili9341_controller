@@ -56,7 +56,6 @@ bool sdl_tick() {
 uint8_t prev_vsync = 0;
 unsigned int transfer_count = 0;
 unsigned int pixel = 0;
-float prev_time_ms = 0.0f;
 
 bool clock_dotclk_tick(uint64_t time_ps) {
     // toggle clock
@@ -91,13 +90,6 @@ bool clock_dotclk_tick(uint64_t time_ps) {
 
         // if vsync falls, then a new frame is ready (also ensure that all pixels have been sent)
         if (prev_vsync == 1 && top->tft_vsync == 0 && pixel == 76800) {
-            float time_ms = time_ps / 1000000000.0f;
-            float delta_t_ms = time_ms - prev_time_ms;
-            float approx_frame_rate = 1000.0f / delta_t_ms;
-            printf("Frame completed at %f ms (delta: %f ms), approx. frame rate: %fHz\n", time_ms, delta_t_ms, approx_frame_rate);
-            prev_time_ms = time_ms;
-
-
             // reset transfer count and pixel
             transfer_count = 0;
             pixel = 0;
