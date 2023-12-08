@@ -23,6 +23,7 @@ module ili9341_controller(
     wire [$clog2(240)-1 : 0] tft_display_x;
     wire [$clog2(320)-1 : 0] tft_display_y;
     wire [1:0] dotclk_count;
+    wire dotclk_overflow;
     wire [$clog2(240)-1 : 0] tft_next_display_x;
     wire tft_next_display_x_on_screen;
     
@@ -31,6 +32,7 @@ module ili9341_controller(
         .enable(enable),
         .dotclk(tft_dotclk),
         .dotclk_count(dotclk_count),
+        .dotclk_overflow(dotclk_overflow),
         .hsync(tft_hsync),
         .vsync(tft_vsync),
         .data_enable(tft_data_enable),
@@ -69,20 +71,13 @@ module ili9341_controller(
     reg [5:0] green;
     reg [5:0] blue;
     
-    reg [5:0] next_red;
-    reg [5:0] next_green;
-    reg [5:0] next_blue;
-    
-    always @(posedge tft_dotclk) begin
-        if (dotclk_count == 0) begin
-            red = memory_read ? memory_data : 8'hFF;
-            green = 0;
-            blue = 0;
-        end
+    always @(*) begin
+        red = memory_data;
+        green = 0;
+        blue = 0;
     end
     
     color_mux color_mux_inst(
-        .clk(tft_dotclk),
         .enable(tft_data_enable),
         .selector(dotclk_count),
         .red(red),

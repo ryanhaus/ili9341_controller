@@ -22,7 +22,7 @@ module spi_video_memory_controller #(
     
     output [15:0] memory_addr,
     inout [7:0] memory_data,
-    output reg memory_write
+    output reg memory_write = 0
 );
     reg memory_write_en = 0;
     
@@ -55,9 +55,11 @@ module spi_video_memory_controller #(
         .BITS(24),
         .DEPTH(32)
     ) pixel_fifo_inst (
-        .read_clk(read_clk && fifo_rd_en),
+        .read_clk(read_clk),
+        .read_enable(fifo_rd_en),
         .read_data(fifo_dout),
         .write_clk(spi_data_ready),
+        .write_enable(1),
         .write_data(spi_data),
         .empty(fifo_empty),
         .full(fifo_full),
@@ -80,7 +82,7 @@ module spi_video_memory_controller #(
     reg [15:0] memory_addr_write;
     assign memory_addr = memory_read ? memory_addr_read : memory_addr_write;
     
-    always @(posedge read_clk) begin
+    always @(*) begin
         // if we're reading, then set the memory address to the appropriate value
         if (memory_read)
             memory_addr_read = display_x + display_y * DISPLAY_WIDTH;

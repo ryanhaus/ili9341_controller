@@ -15,12 +15,7 @@ module sim_sram #(
     input mem_write
 );
     // the actual memory contents of the chip
-    reg [DATA_BITS-1 : 0] memory [MEM_SIZE-1 : 0];
-    
-    // to keep track of when to write to memory
-    reg prev_mem_write = 0;
-    
-    
+    reg [DATA_BITS-1 : 0] memory [MEM_SIZE-1 : 0];    
     
     // handle what the data bus is being used for
     reg [DATA_BITS-1 : 0] mem_data_reg;
@@ -36,11 +31,7 @@ module sim_sram #(
     
     
     // handle writing
-    always @(posedge clk) begin
-        if (prev_mem_write == 0 && mem_write == 1) begin
-            memory[mem_addr] = mem_data;
-        end
-        
-        prev_mem_write = mem_write;
+    always @(posedge mem_write) begin
+        memory[mem_addr] = mem_data;
     end
 endmodule

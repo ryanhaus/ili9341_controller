@@ -8,7 +8,7 @@ module display_region_handler #(
     localparam TOTAL_SIZE = SYNC_SIZE + BP_SIZE + DISPLAY_SIZE + FP_SIZE,
     localparam SIZE_BITS = $clog2(TOTAL_SIZE)
 ) (
-    input clk,
+    input enable,
     input [SIZE_BITS-1 : 0] position,
     
     output reg sync = 0,
@@ -16,11 +16,13 @@ module display_region_handler #(
     output reg display = 0,
     output reg front_porch = 0
 );
-    always @(posedge clk) begin
-        /* verilator lint_off UNSIGNED */
-        sync =          (position >= 0 && position < SYNC_SIZE);
-        back_porch =    (position >= SYNC_SIZE && position < SYNC_SIZE + BP_SIZE);
-        display =       (position >= SYNC_SIZE + BP_SIZE && position < SYNC_SIZE + BP_SIZE + DISPLAY_SIZE);
-        front_porch =   (position >= SYNC_SIZE + BP_SIZE + DISPLAY_SIZE && position < TOTAL_SIZE);
+    always @(*) begin
+        if (enable) begin
+            /* verilator lint_off UNSIGNED */
+            sync =          (position >= 0 && position < SYNC_SIZE);
+            back_porch =    (position >= SYNC_SIZE && position < SYNC_SIZE + BP_SIZE);
+            display =       (position >= SYNC_SIZE + BP_SIZE && position < SYNC_SIZE + BP_SIZE + DISPLAY_SIZE);
+            front_porch =   (position >= SYNC_SIZE + BP_SIZE + DISPLAY_SIZE && position < TOTAL_SIZE);
+        end
     end
 endmodule

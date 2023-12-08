@@ -26,6 +26,7 @@ module display_handler #(
     input dotclk,
     
     output [$clog2(CLKS_PER_PIXEL)-1 : 0] dotclk_count,
+    output dotclk_overflow,
     
     output hsync,
     output vsync,
@@ -48,8 +49,6 @@ module display_handler #(
 
 
     // counter to keep track of when to advance the pixel counter
-    wire dotclk_overflow;
-    
     counter #(
         .MODULUS(CLKS_PER_PIXEL)
     ) dotclk_counter (
@@ -70,8 +69,8 @@ module display_handler #(
         .X_MODULUS(TOTAL_WIDTH),
         .Y_MODULUS(TOTAL_HEIGHT)
     ) lcd_counter (
-        .clk(dotclk),
-        .enable(enable && dotclk_overflow),
+        .clk(dotclk_overflow),
+        .enable(enable),
         .reset(reset),
         .out_x(tft_x),
         .out_y(tft_y)
@@ -94,7 +93,7 @@ module display_handler #(
         .DISPLAY_SIZE(DISPLAY_WIDTH),
         .FP_SIZE(HFP_WIDTH)
     ) horiz_display_region_handler_inst (
-        .clk(dotclk),
+        .enable(enable),
         .position(tft_x),
         .sync(in_hsync),
         .back_porch(),
@@ -114,7 +113,7 @@ module display_handler #(
         .DISPLAY_SIZE(DISPLAY_HEIGHT),
         .FP_SIZE(VFP_HEIGHT)
     ) vert_display_region_handler_inst (
-        .clk(dotclk),
+        .enable(enable),
         .position(tft_y),
         .sync(in_vsync),
         .back_porch(),
@@ -142,8 +141,8 @@ module display_handler #(
         .DISPLAY_SIZE(DISPLAY_WIDTH),
         .FP_SIZE(HFP_WIDTH)
     ) next_horizontal_region_handler_inst (
-        .clk(dotclk),
-        .position(tft_x),
+        .enable(enable),
+        .position(tft_x + 1),
         .sync(),
         .back_porch(),
         .display(next_x_in_horiz_display),

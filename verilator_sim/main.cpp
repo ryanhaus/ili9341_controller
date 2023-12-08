@@ -74,8 +74,10 @@ bool clock_dotclk_tick(uint64_t time_ps) {
             int current_color = transfer_count % 3; // 0 = red, 1 = green, 2 = blue
 
             // write the current pixel to memory
-            framebuffer[pixel].brightness = 0xFF;
-            framebuffer[pixel].colors[current_color] = top->tft_data << 2;
+            if (pixel < 320 * 240) {
+                framebuffer[pixel].brightness = 0xFF;
+                framebuffer[pixel].colors[current_color] = top->tft_data << 2;
+            }
 
             // if all three colors have been sent, advance to next pixel
             if (transfer_count % 3 == 2) {
@@ -89,7 +91,7 @@ bool clock_dotclk_tick(uint64_t time_ps) {
 
 
         // if vsync falls, then a new frame is ready (also ensure that all pixels have been sent)
-        if (prev_vsync == 1 && top->tft_vsync == 0 && pixel == 76800) {
+        if (prev_vsync == 1 && top->tft_vsync == 0 && pixel >= 320 * 240) {
             // reset transfer count and pixel
             transfer_count = 0;
             pixel = 0;

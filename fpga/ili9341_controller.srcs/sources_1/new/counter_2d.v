@@ -10,28 +10,24 @@ module counter_2d #(
     input enable,
     input reset,
     
-    output [X_MODULUS_BITS-1 : 0] out_x,
-    output [Y_MODULUS_BITS-1 : 0] out_y
+    output reg [X_MODULUS_BITS : 0] out_x = 0, // note that the extra bit is for moduli of powers of two
+    output reg [Y_MODULUS_BITS : 0] out_y = 0 // same as above
 );
-    wire overflow_x;
-
-    counter #(
-        .MODULUS(X_MODULUS)
-    ) x_counter (
-        .reset(reset),
-        .enable(enable),
-        .clk(clk),
-        .out(out_x),
-        .overflow(overflow_x)
-    );
-    
-    counter #(
-        .MODULUS(Y_MODULUS)
-    ) y_counter (
-        .reset(reset),
-        .enable(enable && overflow_x),
-        .clk(clk),
-        .out(out_y),
-        .overflow()
-    );
+    always @(posedge clk) begin 
+        if (reset) begin
+            out_x = 0;
+            out_y = 0;
+        end else if (enable) begin
+            if (out_x + 1 == X_MODULUS) begin
+                out_x = 0;
+                
+                if (out_y + 1 == Y_MODULUS)
+                    out_y = 0;
+                else
+                    out_y = out_y + 1;
+            end else begin
+                out_x = out_x + 1;
+            end
+        end  
+    end
 endmodule
