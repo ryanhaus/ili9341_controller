@@ -228,7 +228,7 @@ int main(int argc, char** argv) {
 
     // set up clocks
     verilator_clock dotclk_clock = { clock_dotclk_tick, hz_to_half_period_ps(16531200) }; // 16.5312MHz dotclk
-    verilator_clock sck_clock = { clock_sck_tick, hz_to_half_period_ps(62500000) }; // 62.5MHz sck
+    verilator_clock sck_clock = { clock_sck_tick, hz_to_half_period_ps(1000000) }; // 62.5MHz sck
     verilator_clock clocks[] = { dotclk_clock, sck_clock };
 
     SDL_PollEvent(NULL);
