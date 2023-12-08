@@ -96,6 +96,19 @@ bool clock_dotclk_tick(uint64_t time_ps) {
             transfer_count = 0;
             pixel = 0;
 
+            // verify framebuffer
+            for (int a = 0; a < 65536; a++) {
+                if (framebuffer[a].r != (((a % 240) << 2) % 256) && framebuffer[a].r != 0) {
+                    printf("Pixel #%i is incorrect, expected %i but got %i\n", a, ((a % 240) << 2) % 256, framebuffer[a].r);
+
+                    for (int b = 0; b < a; b++) {
+                        printf("%i, ", framebuffer[b].r);
+                    }
+
+                    printf("\n");
+                }
+            }
+
             // handle sdl
             if (!sdl_tick()) {
                 return false;
