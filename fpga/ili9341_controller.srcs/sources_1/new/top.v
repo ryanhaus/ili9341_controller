@@ -16,7 +16,9 @@ module top(
     inout [7:0] MemDB,
     output RamOEn,
     output RamWEn,
-    output RamCEn
+    output RamCEn,
+    
+    output uart_rxd_out
 );
     // convert 12MHz input clock into 16.5312MHz dotclk (leads to an approx 60Hz vsync, assuming 3 clks/pixel, 328x280 pixels)
     tft_clk_wiz tft_clk_wiz_inst(
@@ -55,4 +57,22 @@ module top(
     assign RamWEn = ~memory_write;
     assign RamCEn = 0;
     assign MemAdr[18:16] = 0;
+    
+    
+    
+    // for UART communication: test, just send 0x0F a bunch of times at 19200 baud
+    wire uart_active;
+    
+    uart_out #(
+        .CLOCKS_PER_BIT(625) // 12MHz / 625 = 19200 baud rate
+    ) uart_out_inst (
+        .reset(reset),
+        .enable(1),
+        .clk(sysclk),
+        .data_in(8'h0F),
+        .start_transfer(~uart_active),
+        .bit_clk(),
+        .uart_out(uart_rxd_out),
+        .transfer_active(uart_active)
+    );
 endmodule

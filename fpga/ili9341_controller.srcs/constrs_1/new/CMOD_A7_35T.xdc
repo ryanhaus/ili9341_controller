@@ -86,7 +86,7 @@ set_property -dict { PACKAGE_PIN U8    IOSTANDARD LVCMOS33 } [get_ports { tft_da
 set_property -dict { PACKAGE_PIN V8    IOSTANDARD LVCMOS33 } [get_ports { tft_hsync }]; #IO_L14N_T2_SRCC_34 Sch=pio[48]
 
 ## UART
-#set_property -dict { PACKAGE_PIN J18   IOSTANDARD LVCMOS33 } [get_ports { uart_rxd_out }]; #IO_L7N_T1_D10_14 Sch=uart_rxd_out
+set_property -dict { PACKAGE_PIN J18   IOSTANDARD LVCMOS33 } [get_ports { uart_rxd_out }]; #IO_L7N_T1_D10_14 Sch=uart_rxd_out
 #set_property -dict { PACKAGE_PIN J17   IOSTANDARD LVCMOS33 } [get_ports { uart_txd_in  }]; #IO_L7P_T1_D09_14 Sch=uart_txd_in
 
 ## Crypto 1 Wire Interface

@@ -21,6 +21,7 @@ module top_sim();
     wire RamOEn;
     wire RamWEn;
     wire RamCEn;
+    wire uart_out;
     
     top top_inst(
         .sysclk(sysclk),
@@ -37,7 +38,8 @@ module top_sim();
         .MemDB(memory_data),
         .RamOEn(RamOEn),
         .RamWEn(RamWEn),
-        .RamCEn(RamCEn)
+        .RamCEn(RamCEn),
+        .uart_rxd_out(uart_out)
     );
     
     
