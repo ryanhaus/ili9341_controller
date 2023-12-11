@@ -7,7 +7,8 @@
 #include "fpga_interface.h"
 
 int main() {
-    // initialize FPGA
+    // initialize TFT and FPGA
+    tft_init();
     fpga_init();
 
     // wait until the FPGA is ready
@@ -17,9 +18,6 @@ int main() {
     gpio_init(PICO_DEFAULT_LED_PIN);
     gpio_set_dir(PICO_DEFAULT_LED_PIN, GPIO_OUT);
     gpio_put(PICO_DEFAULT_LED_PIN, 1);
-
-    // initialize TFT (also will reset FPGA, as the reset pin is shared)
-    tft_init();
     
     // loop
     uint16_t i = 0;
