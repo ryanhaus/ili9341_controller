@@ -42,31 +42,46 @@ module uart_out #(
     
     // to keep track of when to start the transfer
     reg prev_start_transfer = 0;
+    reg prev_transfer_done = 0;
+    reg transfer_done = 0;
     
   	always @(posedge bit_clk) begin
-        // determine when to start a transfer
-        if (start_transfer == 1 && prev_start_transfer == 0)
-            transfer_active = 1;
-             
-        prev_start_transfer = start_transfer;
-        
+  	     if (enable) begin
+            // determine when to start a transfer
+            if (start_transfer == 1 && prev_start_transfer == 0)
+                transfer_active = 1;
+                
+            prev_start_transfer = start_transfer;
+            
+            // determine when to end a transfer
+            if (transfer_done == 1 && prev_transfer_done == 0)
+                transfer_active = 0;
+                
+            prev_transfer_done = transfer_done;         
+        end
+    end
+    
+    always @(*) begin
         // handle the transfer if there's currently one active
-        if (transfer_active) begin
+        if (transfer_active && enable) begin
             case (uart_bit_count)
                 // start bit
-                4'd0: uart_out = 0;
+                4'd0: begin 
+                    uart_out = 0;
+                    transfer_done = 0;
+                end             
                 
                 // stop bit
                 4'd9: begin
                     uart_out = 1;
-                    transfer_active = 0;
-                end             
-                
+                    transfer_done = 1;
+                end              
+               
                 // any of the data bits
                 default: begin
                     uart_out = data_in[uart_bit_count - 1];
                 end
             endcase
-        end
+        end else uart_out = 1; // otherwise idle
     end
 endmodule

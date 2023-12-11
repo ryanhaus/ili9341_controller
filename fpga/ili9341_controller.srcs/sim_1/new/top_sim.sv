@@ -6,7 +6,7 @@ module top_sim();
     always #42 sysclk = ~sysclk; // close enough to 12MHz
    
     reg reset;
-    initial reset = 0;
+    initial reset = 1; // active low
     
     reg spi_sck;
     reg spi_sda;
@@ -39,7 +39,7 @@ module top_sim();
         .RamOEn(RamOEn),
         .RamWEn(RamWEn),
         .RamCEn(RamCEn),
-        .uart_rxd_out(uart_out)
+        .rp_uart_tx(uart_out)
     );
     
     

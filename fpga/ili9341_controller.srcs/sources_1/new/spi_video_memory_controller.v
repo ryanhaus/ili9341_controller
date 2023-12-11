@@ -53,7 +53,7 @@ module spi_video_memory_controller #(
     
     register_fifo #(
         .BITS(24),
-        .DEPTH(1024)
+        .DEPTH(32)
     ) pixel_fifo_inst (
         .read_clk(read_clk),
         .read_enable(fifo_rd_en),
