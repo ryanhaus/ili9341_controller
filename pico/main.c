@@ -6,22 +6,23 @@
 #include "tft_interface.h"
 #include "fpga_interface.h"
 
-uint8_t red = 0;
-
 int main() {
-    tft_init();
+    // initialize FPGA
     fpga_init();
-    
-    uint16_t i = 0;
 
-    for (int frame = 0; frame < 10; frame++) {
-        while (!fpga_read_vsync()) {
-            asm("nop");
-        }
-        while(fpga_read_vsync()) {
-            asm("nop");
-        }
-    }
+    // wait until the FPGA is ready
+    while (!fpga_read_spi_ready()) {}
+
+    // turn LED on
+    gpio_init(PICO_DEFAULT_LED_PIN);
+    gpio_set_dir(PICO_DEFAULT_LED_PIN, GPIO_OUT);
+    gpio_put(PICO_DEFAULT_LED_PIN, 1);
+
+    // initialize TFT (also will reset FPGA, as the reset pin is shared)
+    tft_init();
+    
+    // loop
+    uint16_t i = 0;
 
     while (1) {
         while (!fpga_read_spi_ready()) {}
