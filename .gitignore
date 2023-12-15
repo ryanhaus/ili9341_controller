@@ -12,3 +12,11 @@ verilator_sim/obj_dir
 fpga/*
 !fpga/ili9341_controller.srcs
 !fpga/ili9341_controller.xpr
+
+# lattice/icestorm
+lattice_fpga/build/*
+lattice_fpga/dep/*
+
+# pcb
+pcb/ili9341_controller/ili9341_controller-backups/*
+*.bak
