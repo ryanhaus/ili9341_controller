@@ -10,6 +10,7 @@ pico_sdk_init()
 add_executable(${PROJECT_NAME} src/pico/main.c)
 target_link_libraries(${PROJECT_NAME}
 	pico_stdlib
+	hardware_spi
 )
 
 pico_add_extra_outputs(${PROJECT_NAME})
