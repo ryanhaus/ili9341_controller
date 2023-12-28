@@ -32,14 +32,14 @@ module register_fifo #(
 
 
     // handle FIFO addresses and reading/writing
-    always @(negedge write_clk) begin
+    always @(posedge write_clk) begin
         if (write_enable && !full) begin
             memory[write_addr] = write_data;
             write_addr = write_addr + 1;
         end
     end
 
-    always @(negedge read_clk) begin
+    always @(posedge read_clk) begin
         if (read_enable && !empty) begin
             read_data = memory[read_addr];
             read_addr = read_addr + 1;

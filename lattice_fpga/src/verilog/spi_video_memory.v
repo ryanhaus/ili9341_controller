@@ -50,7 +50,7 @@ module spi_video_memory # (
 
     // split up the spi data into usable memory controlling data
     wire ram_select = spi_data[31]; // 0 for sprite ram, 1 for tile ram
-    wire [14:0] write_addr = spi_data[30:15];
+    wire [14:0] write_addr = spi_data[30:16];
     wire [15:0] write_data = spi_data[15:0];
 
 
@@ -116,10 +116,13 @@ module spi_video_memory # (
                         spi_fifo_read = 1;
                     end
                     1, 3: begin
-                        if (ram_select)
-                            tile_mem[write_addr] = write_data;
-                        else
-                            sprite_mem_wr_en = 1;
+                        if (spi_fifo_read)
+                            if (ram_select)
+                                tile_mem[write_addr] = write_data;
+                            else begin
+                                sprite_addr = write_addr;
+                                sprite_mem_wr_en = 1;
+                            end
 
                         spi_fifo_read = 0;
                     end
