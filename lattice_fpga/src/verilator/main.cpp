@@ -24,28 +24,6 @@ SDL_Window* window;
 SDL_Renderer* renderer;
 SDL_Texture* texture;
 
-struct tft_pixel {
-    union {
-        // 888 encoding
-        struct {
-            uint8_t b;
-            uint8_t g;
-            uint8_t r;
-        };
-
-        // 565 encoding
-        struct {
-            uint8_t
-                : 3,
-                b5 : 5,
-                : 2,
-                g6 : 6,
-                : 3,
-                r5 : 5;
-        };
-    };
-};
-
 tft_pixel framebuffer[320 * 240];
 
 
@@ -62,7 +40,7 @@ bool state_machine_clock_tick(uint64_t time_ps) {
     if (RUN_SCREEN_SIM) {
         if (top->tft_dotclk && !previous_tft_dotclk) {
             // positive edge of dotclk, call appropriate function
-            continue_sim = tft_sim_tick(top, window, renderer, texture);
+            continue_sim = tft_sim_tick(top, window, renderer, texture, &framebuffer[0]);
         }
 
         previous_tft_dotclk = top->tft_dotclk;
