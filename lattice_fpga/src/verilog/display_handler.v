@@ -24,10 +24,8 @@ module display_handler #(
     input enable,
     
     input dotclk,
-    
-    output [$clog2(CLKS_PER_PIXEL)-1 : 0] dotclk_count,
-    output dotclk_overflow,
-    
+    input pixel_clock,
+
     output hsync,
     output vsync,
     output data_enable,
@@ -48,19 +46,6 @@ module display_handler #(
 
 
 
-    // counter to keep track of when to advance the pixel counter
-    counter #(
-        .MODULUS(CLKS_PER_PIXEL)
-    ) dotclk_counter (
-        .reset(reset),
-        .enable(enable),
-        .clk(dotclk),
-        .out(dotclk_count),
-        .overflow(dotclk_overflow)
-    );
-
-
-
     // counters to hold the current pixel position on the screen
     wire [WIDTH_BITS-1 : 0] tft_x;
     wire [HEIGHT_BITS-1 : 0] tft_y;
@@ -69,7 +54,7 @@ module display_handler #(
         .X_MODULUS(TOTAL_WIDTH),
         .Y_MODULUS(TOTAL_HEIGHT)
     ) lcd_counter (
-        .clk(dotclk_overflow),
+        .clk(pixel_clock),
         .enable(enable),
         .reset(reset),
         .out_x(tft_x),
