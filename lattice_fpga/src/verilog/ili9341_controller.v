@@ -1,7 +1,3 @@
-`ifdef VERILATOR
-`include "/usr/share/yosys/ice40/cells_sim.v"
-`endif
-
 // this module uses a display_handler instance to drive sync signals, and also generates the video output
 module ili9341_controller(
     input reset,
