@@ -1,29 +1,30 @@
 # ili9341_controller
-A controller for a TFT display with a [ILI9341 display controller](https://cdn-shop.adafruit.com/datasheets/ILI9341.pdf), specifically the [MI0283QT-11](https://www.adafruit.com/product/1774). This design uses a Raspberry Pi Pico programmed in C to initialize the display and a Digilent CMOD A7-35T FPGA board programmed in Verilog to control it. Future plans include to remove the Pico and have the FPGA initialize the display as well.
+Powered by an RP2040 and a Lattice iCE40UP5K, made by Ryan Hausmann.
+Please note that everything was tested on Ubuntu running on Windows through WSL.
 
-## Compilation
-*Note: currently only set up to be compiled on Ubuntu, but can be compiled on Windows using [WSL](https://learn.microsoft.com/en-us/windows/wsl/install).*
+## Block diagram
+![](photos/block_diagram.svg)
+Please note that this design has not been tested on actual hardware yet.
 
-### Pico firmware
-Required dependencies: `sudo apt install cmake gcc-arm-none-eabi libnewlib-arm-none-eabi libstdc++-arm-none-eabi-newlib`
-The firmware for the RP Pico can be built using `make pico` in the top directory. Note that the Pico SDK will be installed as part of the build process. Once fully compiled, the file `/pico/build/ili9341_controller.uf2` can be uploaded to the Pico.
+## Building
+#### Prerequisites
+Pico: `sudo apt install cmake gcc-arm-none-eabi libnewlib-arm-none-eabi libstdc++-arm-none-eabi-newlib` (SDK is installed automatically)
+Synthesis: see [this page](https://clifford.at/icestorm), specifically the `Where are the Tools? How to install?` section.
+#### Building
+The FPGA configuration is packaged into the RP2040 program. The `build/ili9341_controller.uf2` file can be built with `make` or `make pico`. This will compile the RP2040 program and also automatically build the FPGA configuration, with the files stored in the `build` directory. 
+#### Programming
+On Windows, the generated uf2 file can be dragged into the Pico's drive folder.
 
-### Verilator simulator (w/ SDL)
-Required dependencies: `sudo apt install libsdl2-dev verilator git help2man perl python3 make autoconf g++ flex bison ccache libgoogle-perftools-dev numactl perl-doc`
-The Verilator simulator can be built with `make verilator`, and can be made & run using `make verilator_run`, or the file `/verilator_sim/obj_dir/Vili9341_controller` can be executed. For viewing traces, use `make verilator_run_trace` to generate the wave file and `gtkwave trace.vcd` to view it. Note that gtkwave must be installed with `sudo apt install gtkwave`.
 
-### Bitstream files for FPGA
-The bitstream files for the FPGA must be built in the [Xilinx Vivado software](https://www.xilinx.com/support/download.html). The `fpga` directory has all files required for building. The project is set up for the Digilent CMOD A7-35T as shown in the photos below (schematic soon).
+## Simulation
+Simulation has been implemented with Verilog and SDL.
+#### Prerequisites
+Verilator: See [this page](https://verilator.org/guide/latest/install.html).
+SDL: See [this page](https://wiki.libsdl.org/SDL2/Installation).
+#### Building
+To build the simulation program, run `make verilator`.
+#### Running
+To run the simulation program, run `./build/Vili9341_controller`. The program will not do anything useful by default, but all the options can be viewed with the `--help` argument.
 
-## Cleaning Files
-The pico firmware build output can be cleaned with `make clean_pico`, the SDK and build files can also be cleaned with `make clean_pico_all`. The verilator build output can be cleaned with `make clean_verilator`. Both the pico firmware & verilator build outputs can be cleaned with `make clean`, and both build outputs & the pico SDK can be cleaned with `make clean_all`.
-
-## Photos
-Here is the circuit as it is currently on a breadboard, without the display:
-![](pictures/ili9341_breadboard.jpg)
-
-Here is the circuit with the display connected & displaying a color gradient:
-![](pictures/ili9341_breadboard_display.jpg)
-
-Here is a screenshot of the Verilator simulator video output with the same above color gradient:
-![](pictures/ili9341_verilator.jpg)
+## Cleaning
+`make clean` will remove all build files. The Pico SDK will remain.
