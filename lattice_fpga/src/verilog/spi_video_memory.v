@@ -100,8 +100,11 @@ module spi_video_memory # (
         advance_pixel = (state == 0);
     end
 
+    reg spi_in_use = 0;
+
     always @(negedge clk) begin
         sprite_mem_wr_en = 0;
+        spi_fifo_read = 0;
 
         if (in_display_region)
             case (state)
@@ -110,22 +113,24 @@ module spi_video_memory # (
                 2: current_pixel = sprite_data;
             endcase
         else
-            if (!spi_fifo_empty)
-                case (state)
-                    0, 2: begin
-                        spi_fifo_read = 1;
-                    end
-                    1, 3: begin
-                        if (spi_fifo_read)
-                            if (ram_select)
-                                tile_mem[write_addr] = write_data;
-                            else begin
-                                sprite_addr = write_addr;
-                                sprite_mem_wr_en = 1;
-                            end
+            case (state)
+                0, 2: begin
+                    spi_in_use = !spi_fifo_empty;
 
-                        spi_fifo_read = 0;
-                    end
-                endcase
+                    if (spi_in_use)
+                        spi_fifo_read = 1;
+                end
+                1, 3: begin
+                    if (spi_in_use)
+                        if (ram_select)
+                            tile_mem[write_addr] = write_data;
+                        else begin
+                            sprite_addr = write_addr;
+                            sprite_mem_wr_en = 1;
+                        end
+
+                    spi_fifo_read = 0;
+                end
+            endcase
     end
 endmodule

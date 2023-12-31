@@ -6,6 +6,7 @@
 
 #include "clock_handler.h"
 #include "tft_sim.h"
+#include "spi_sim.h"
 
 
 
@@ -23,6 +24,8 @@ VerilatedVcdC* m_trace;
 SDL_Window* window;
 SDL_Renderer* renderer;
 SDL_Texture* texture;
+
+spi_inst spi_sim_inst;
 
 tft_pixel framebuffer[320 * 240];
 
@@ -52,15 +55,20 @@ bool state_machine_clock_tick(uint64_t time_ps) {
 
 
 // handle sck clock ticks
+bool done = false;
+
 bool sck_clock_tick(uint64_t time_ps) {
     if (top->spi_ready) {
-        top->spi_sck = !top->spi_sck;
+        if (!done) {
+            done = spi_sim_inst.done;
+            top->spi_sck = !top->spi_sck;
 
-        if (!top->spi_sck) {
-            top->spi_sda = rand() & 1;
+            if (!top->spi_sck) {
+                top->spi_sda = spi_next_bit(&spi_sim_inst);
+            }
+
+            top->eval();
         }
-
-        top->eval();
     }
 
     return true;
@@ -120,7 +128,7 @@ int main(int argc, char** argv) {
     top = new Vili9341_controller;
     top->reset = 1;
     top->enable = 1;
-    top->spi_sck = 0;
+    top->spi_sck = 1;
     top->spi_sda = 0;
     top->sm_clock = 1;
     top->tft_dotclk = 0;
@@ -165,6 +173,22 @@ int main(int argc, char** argv) {
             return 1;
         }
     }
+
+
+    // set up SPI simulation
+    uint32_t spi_data[] = {
+        0b10000000000000000000000000000000,
+        0b00000000000000001111111111111111,
+        0b00000000000000011111111111111111,
+        0b00000000000000101111111111111111,
+        0b00000000000000111111111111111111,
+        0b00000000000001001111111111111111,
+        0b00000000000001011111111111111111,
+        0b00000000000001101111111111111111,
+        0b00000000000001111111111111111111,
+    };
+
+    spi_sim_inst = spi_init(spi_data, sizeof(spi_data) / sizeof(uint32_t));
 
 
 
