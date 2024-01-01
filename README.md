@@ -7,7 +7,8 @@ Please note that everything was tested on Ubuntu running on Windows through WSL.
 Please note that this design has not been tested on actual hardware yet.
 
 ## Prerequisites
-Run `./install_prereqs.sh` to automatically install all prerequisites (pico-sdk, icestorm, nextpnr, yosys, verilator, sdl).
+Run `sudo apt install make cmake gcc-arm-none-eabi libnewlib-arm-none-eabi libstdc++-arm-none-eabi-newlib build-essential clang bison flex libreadline-dev gawk tcl-dev libffi-dev git mercurial graphviz xdot pkg-config python3 libftdi-dev qtbase5-dev qtchooser qt5-qmake qtbase5-dev-tools python3-dev libboost-all-dev cmake libeigen3-dev git help2man perl python3 g++ verilator libsdl2-dev libsdl2-2.0-0`.
+This is enough to do simulation with Verilator and SDL. To install the synthesis tools and the Pico SDK, run `./install_synthesis.sh`.
 
 ## Synthesis/Pico Build
 Synthesis is handled by Yosys and Project Icestorm. The Pico firmware is compiled using cmake & pico-sdk.
@@ -23,6 +24,7 @@ Simulation has been implemented with Verilog and SDL.
 To build the simulation program, run `make verilator`.
 #### Running
 To run the simulation program, run `./build/Vili9341_controller`. The program will not do anything useful by default, but all the options can be viewed with the `--help` argument.
+Example: to show the simulated screen output, run `./build/Vili9341_controller --screen-sim`
 
 ## Cleaning
 `make clean` will remove all build files. The dependencies will remain in the `dep` folder.
