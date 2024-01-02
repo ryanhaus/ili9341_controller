@@ -12,12 +12,12 @@
 
 
 // global variables
-#define WINDOW_SCALE 2
-
 uint64_t max_time_ns = -1;
 bool VERILATOR_TRACE = false;
 bool RUN_GTKWAVE = false;
 bool RUN_SCREEN_SIM = false;
+
+uint8_t WINDOW_SCALE = 1;
 
 Vili9341_controller* top;
 VerilatedVcdC* m_trace;
@@ -94,10 +94,11 @@ int main(int argc, char** argv) {
         if (arg == "--help") {
             std::cout << "Usage: " << argv[0] << " [options]" << std::endl;
             std::cout << "Options:" << std::endl;
-            std::cout << "  --max-time [time_ns]   Maximum simulation time in nanoseconds (default: infinity)" << std::endl;
-            std::cout << "  --trace                Enable tracing (generates a VCD file)" << std::endl;
-            std::cout << "  --gtkwave              Automatically open the VCD file with GTKWave (requires it to be installed, sudo apt install gtkwave)" << std::endl;
-            std::cout << "  --screen-sim           Simulate a physical screen connected to the FPGA with SDL" << std::endl;
+            std::cout << "  --max-time [time_ns]    Maximum simulation time in nanoseconds (default: infinity)" << std::endl;
+            std::cout << "  --trace                 Enable tracing (generates a VCD file)" << std::endl;
+            std::cout << "  --gtkwave               Automatically open the VCD file with GTKWave (requires it to be installed, sudo apt install gtkwave)" << std::endl;
+            std::cout << "  --screen-sim            Simulate a physical screen connected to the FPGA with SDL" << std::endl;
+            std::cout << "  --screen-scale [scale]  Changes the scale of the simulated 240x320 screen (default: 1x scale)" << std::endl;
             return 0;
         } else if (arg == "--max-time") {
             if (i + 1 >= argc) {
@@ -112,6 +113,8 @@ int main(int argc, char** argv) {
             RUN_GTKWAVE = true;
         } else if (arg == "--screen-sim") {
             RUN_SCREEN_SIM = true;
+        } else if (arg == "--screen-scale") {
+            WINDOW_SCALE = std::stoi(argv[++i]);
         } else {
             std::cout << "Error: Unknown argument '" << arg << "'." << std::endl;
             return 1;
@@ -192,7 +195,7 @@ int main(int argc, char** argv) {
     };
 
     tft_sprite sprite_smile = bitmap_to_sprite(sprite_smile_bmap);
-    
+
     std::array<spi_transfer, 64> smile_transfers = sprite_to_spi_transfer(sprite_smile, 0);
 
     for (int i = 0; i < 64; i++) {

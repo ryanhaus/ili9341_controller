@@ -12,19 +12,22 @@ This is enough to do simulation with Verilator and SDL. To install the synthesis
 
 ## Synthesis/Pico Build
 Synthesis is handled by Yosys and Project Icestorm. The Pico firmware is compiled using cmake & pico-sdk.
-#### Building
+### Building
 The FPGA configuration is packaged into the RP2040 program. The `build/ili9341_controller.uf2` file can be built with `make` or `make pico`. This will compile the RP2040 program and also automatically build the FPGA configuration, with the files stored in the `build` directory. 
-#### Programming
+### Programming
 On Windows, the generated uf2 file can be dragged into the Pico's drive folder.
 
 
 ## Simulation
 Simulation has been implemented with Verilog and SDL.
-#### Building
+### Building
 To build the simulation program, run `make verilator`.
-#### Running
+### Running
 To run the simulation program, run `./build/Vili9341_controller`. The program will not do anything useful by default, but all the options can be viewed with the `--help` argument.
-Example: to show the simulated screen output, run `./build/Vili9341_controller --screen-sim`
+### Screen Simulation
+To show the simulated screen output, run `./build/Vili9341_controller --screen-sim`. The `--screen-scale` argument can also be used to scale the screen, the default is 1x (240x320 px).
+Below is a screenshot of a simulation with a bunch of smiley face sprites:
+![](photos/sim_smile.png)
 
 ## Cleaning
 `make clean` will remove all build files. The dependencies will remain in the `dep` folder.
