@@ -1,28 +1,23 @@
+#include <queue>
 #include <stdint.h>
 
 
 
 typedef struct {
-    uint32_t* data;
-    size_t data_size;
+    std::queue<uint32_t> data_queue;
 
     size_t data_index;
     uint8_t bit_index;
-
-    bool done;
 } spi_inst;
 
 
 
-spi_inst spi_init(uint32_t* data, size_t data_size) {
+spi_inst spi_init() {
     spi_inst inst;
-    inst.data = data;
-    inst.data_size = data_size;
+    inst.data_queue = std::queue<uint32_t>();
 
     inst.data_index = 0;
     inst.bit_index = 0;
-
-    inst.done = false;
 
     return inst;
 }
@@ -30,17 +25,13 @@ spi_inst spi_init(uint32_t* data, size_t data_size) {
 
 
 bool spi_next_bit(spi_inst* inst) {
-    bool bit = inst->data[inst->data_index] & (0x80000000 >> inst->bit_index);
+    bool bit = inst->data_queue.front() & (0x80000000 >> inst->bit_index);
 
     inst->bit_index++;
     
     if (inst->bit_index == 32) {
+        inst->data_queue.pop();
         inst->bit_index = 0;
-        inst->data_index++;
-
-        if (inst->data_index == inst->data_size) {
-            inst->done = true;
-        }
     }
 
     return bit;

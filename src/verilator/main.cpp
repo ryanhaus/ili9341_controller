@@ -60,7 +60,7 @@ bool done = false;
 bool sck_clock_tick(uint64_t time_ps) {
     if (top->spi_ready) {
         if (!done) {
-            done = spi_sim_inst.done;
+            done = spi_sim_inst.data_queue.empty();
             top->spi_sck = !top->spi_sck;
 
             if (!top->spi_sck) {
@@ -192,7 +192,11 @@ int main(int argc, char** argv) {
         0b00000000000011101111111111111111,
     };
 
-    spi_sim_inst = spi_init(spi_data, sizeof(spi_data) / sizeof(uint32_t));
+    spi_sim_inst = spi_init();
+
+    for (size_t i = 0; i < sizeof(spi_data) / sizeof(uint32_t); i++) {
+        spi_sim_inst.data_queue.push(spi_data[i]);
+    }
 
 
 
