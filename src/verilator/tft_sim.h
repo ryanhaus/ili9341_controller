@@ -6,27 +6,14 @@
 
 
 // data structure for a single pixel, available in RGB888 encoding (for SDL) and RGB565 encoding (for the FPGA output)
+#pragma pack(push, 1)
 struct tft_pixel {
-    union {
-        // 888 encoding
-        struct {
-            uint8_t b;
-            uint8_t g;
-            uint8_t r;
-        };
-
-        // 565 encoding
-        struct {
-            uint8_t
-                : 3,
-                b5 : 5,
-                : 2,
-                g6 : 6,
-                : 3,
-                r5 : 5;
-        };
-    };
+    uint16_t
+        b5 : 5,
+        g6 : 6,
+        r5 : 5;
 };
+#pragma pack(pop)
 
 
 

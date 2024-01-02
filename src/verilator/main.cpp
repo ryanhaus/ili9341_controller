@@ -166,7 +166,7 @@ int main(int argc, char** argv) {
             return 1;
         }
 
-        texture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_RGB888, SDL_TEXTUREACCESS_STREAMING, 320, 240);
+        texture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_RGB565, SDL_TEXTUREACCESS_STREAMING, 240, 320);
 
         if (texture == NULL) {
             std::cout << "Error: Failed to create SDL texture: " << SDL_GetError() << std::endl;
@@ -186,6 +186,10 @@ int main(int argc, char** argv) {
         0b00000000000001011111111111111111,
         0b00000000000001101111111111111111,
         0b00000000000001111111111111111111,
+        0b00000000000010001111111111111111,
+        0b00000000000010101111111111111111,
+        0b00000000000011001111111111111111,
+        0b00000000000011101111111111111111,
     };
 
     spi_sim_inst = spi_init(spi_data, sizeof(spi_data) / sizeof(uint32_t));
