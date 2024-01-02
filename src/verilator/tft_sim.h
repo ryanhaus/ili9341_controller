@@ -1,3 +1,5 @@
+#pragma once
+
 #include <verilated.h>
 #include <Vili9341_controller.h>
 #include <verilated_vcd_c.h>
@@ -5,7 +7,7 @@
 
 
 
-// data structure for a single pixel, available in RGB888 encoding (for SDL) and RGB565 encoding (for the FPGA output)
+// data structure for a single pixel in RGB565 format
 #pragma pack(push, 1)
 struct tft_pixel {
     uint16_t

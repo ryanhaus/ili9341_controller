@@ -7,6 +7,7 @@
 #include "clock_handler.h"
 #include "tft_sim.h"
 #include "spi_sim.h"
+#include "sprites.h"
 
 
 
@@ -176,26 +177,26 @@ int main(int argc, char** argv) {
 
 
     // set up SPI simulation
-    uint32_t spi_data[] = {
-        0b10000000000000000000000000000000,
-        0b00000000000000001111111111111111,
-        0b00000000000000011111111111111111,
-        0b00000000000000101111111111111111,
-        0b00000000000000111111111111111111,
-        0b00000000000001001111111111111111,
-        0b00000000000001011111111111111111,
-        0b00000000000001101111111111111111,
-        0b00000000000001111111111111111111,
-        0b00000000000010001111111111111111,
-        0b00000000000010101111111111111111,
-        0b00000000000011001111111111111111,
-        0b00000000000011101111111111111111,
-    };
-
     spi_sim_inst = spi_init();
 
-    for (size_t i = 0; i < sizeof(spi_data) / sizeof(uint32_t); i++) {
-        spi_sim_inst.data_queue.push(spi_data[i]);
+
+    uint8_t sprite_smile_bmap[8] = {
+        0b01111110,
+        0b10000001,
+        0b10100101,
+        0b10000001,
+        0b10100101,
+        0b10011001,
+        0b10000001,
+        0b01111110,
+    };
+
+    tft_sprite sprite_smile = bitmap_to_sprite(sprite_smile_bmap);
+    
+    std::array<spi_transfer, 64> smile_transfers = sprite_to_spi_transfer(sprite_smile, 0);
+
+    for (int i = 0; i < 64; i++) {
+        spi_sim_inst.data_queue.push(smile_transfers[i].transfer_data);
     }
 
 
