@@ -58,8 +58,10 @@ module spi_video_memory # (
     reg mem_wr_en = 0;
 
     // tile ram
-    reg [9:0] tile_ram_addr = 0;
-    wire [15:0] tile_ram_data;
+    reg [10:0] tile_ram_addr = 0;
+    wire [15:0] tile_ram_data_16;
+
+    wire [7:0] tile_ram_data = (tile_ram_addr[0] == 1 ? tile_ram_data_16[15:8] : tile_ram_data_16[7:0]);
 
     addr_chained_bram #(
         .BRAM_COUNT(3)
@@ -68,8 +70,8 @@ module spi_video_memory # (
         .waddr(write_addr),
         .wen(mem_wr_en && ram_select),
         .wclk(~clk), // write on falling edge of clk
-        .rdata(tile_ram_data),
-        .raddr(tile_ram_addr),
+        .rdata(tile_ram_data_16),
+        .raddr(tile_ram_addr[10:1]),
         .ren(in_display_region),
         .rclk(~clk) // read on falling edge of clk
     );
@@ -109,7 +111,7 @@ module spi_video_memory # (
         if (in_display_region) begin // we must read from memory
             // set addresses of appropriate memory
             case (state)
-                1: tile_ram_addr = display_x + (display_y * 30);
+                1: tile_ram_addr = (display_x / 8) + ((display_y / 8) * 30);
                 2: sprite_ram_addr = (24 * tile_ram_data) + 4 + (display_y % 8);
                 3: sprite_ram_addr = (24 * tile_ram_data) + pixels[display_x % 8];
             endcase
