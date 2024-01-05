@@ -20,13 +20,13 @@ module ili9341_controller(
     wire [$clog2(320)-1 : 0] tft_display_y;
     wire [$clog2(240)-1 : 0] tft_next_display_x;
     wire tft_next_display_x_on_screen;
-    wire advance_pixel;
+    wire posclk;
     
     display_handler display_handler_inst (
         .reset(reset),
         .enable(enable),
         .dotclk(tft_dotclk),
-        .pixel_clock(advance_pixel),
+        .pixel_clock(posclk),
         .hsync(tft_hsync),
         .vsync(tft_vsync),
         .data_enable(tft_data_enable),
@@ -43,7 +43,7 @@ module ili9341_controller(
         .reset(reset),
         .clk(sm_clock),
         .dotclk(tft_dotclk),
-        .advance_pixel(advance_pixel),
+        .posclk(posclk),
         .spi_sck(spi_sck),
         .spi_sda(spi_sda),
         .spi_ready(spi_ready),

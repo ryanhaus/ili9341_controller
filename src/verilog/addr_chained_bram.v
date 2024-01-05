@@ -18,7 +18,7 @@ module addr_chained_bram #(
 
     always @(*) begin
         if (ren) begin
-            rdata <= rdatas[raddr[ADDR_BITS-1 : 8]];
+            rdata = rdatas[raddr[ADDR_BITS-1 : 8]];
         end
     end
 

@@ -183,23 +183,17 @@ int main(int argc, char** argv) {
     spi_sim_inst = spi_init();
 
 
-    uint8_t sprite_smile_bmap[8] = {
-        0b01111110,
-        0b10000001,
-        0b10100101,
-        0b10000001,
-        0b10100101,
-        0b10011001,
-        0b10000001,
-        0b01111110,
+    uint32_t transfers[] = {
+        0x0003F800,
+        0x00040000,
+        0x00050C30,
+        0x00060000,
+        0x0007300C,
+        0x00080FF0
     };
 
-    tft_sprite sprite_smile = bitmap_to_sprite(sprite_smile_bmap);
-
-    std::array<spi_transfer, 64> smile_transfers = sprite_to_spi_transfer(sprite_smile, 0);
-
-    for (int i = 0; i < 64; i++) {
-        spi_sim_inst.data_queue.push(smile_transfers[i].transfer_data);
+    for (int i = 0; i < sizeof(transfers) / sizeof(uint32_t); i++) {
+        spi_sim_inst.data_queue.push(transfers[i]);
     }
 
 

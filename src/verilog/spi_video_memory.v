@@ -2,7 +2,6 @@
 module spi_video_memory # (
     parameter DISPLAY_WIDTH = 240,
     parameter DISPLAY_HEIGHT = 320,
-    parameter SPRITE_SIZE = 8, // must be a power of 2 and a common factor of both DISPLAY_WIDTH and DISPLAY_HEIGHT
     
     parameter WIDTH_BITS = $clog2(DISPLAY_WIDTH),
     parameter HEIGHT_BITS = $clog2(DISPLAY_HEIGHT)
@@ -11,7 +10,7 @@ module spi_video_memory # (
     input clk,
 
     output reg dotclk = 0,
-    output reg advance_pixel = 0,
+    output reg posclk = 0,
 
     input spi_sck,
     input spi_sda,
@@ -21,7 +20,7 @@ module spi_video_memory # (
     input [HEIGHT_BITS-1 : 0] display_y,
     input in_display_region,
 
-    output reg [15:0] current_pixel
+    output [15:0] current_pixel
 );
     // SPI FIFO
     wire [31:0] spi_data;
@@ -38,8 +37,8 @@ module spi_video_memory # (
         .clk(clk),
         .sck(spi_sck),
         .sda(spi_sda),
-        .read_clk(spi_fifo_read),
-        .read_enable(~in_display_region),
+        .read_clk(clk),
+        .read_enable(spi_fifo_read),
         .read_data(spi_data),
         .fifo_empty(spi_fifo_empty),
         .fifo_almost_full(),
@@ -55,82 +54,91 @@ module spi_video_memory # (
 
 
 
-    // memory for storing sprite and tile data
-    localparam SPRITE_MEM_SIZE = 256 * SPRITE_SIZE * SPRITE_SIZE;
-    localparam SPRITE_MEM_ADDR_BITS = $clog2(SPRITE_MEM_SIZE);
-    localparam TILE_MEM_SIZE = (DISPLAY_WIDTH / SPRITE_SIZE) * (DISPLAY_HEIGHT / SPRITE_SIZE);
-    localparam TILE_MEM_ADDR_BITS = $clog2(TILE_MEM_SIZE);
+    // memory primitives
+    reg mem_wr_en = 0;
 
-    reg [SPRITE_MEM_ADDR_BITS-1 : 0] sprite_addr;
-    reg [TILE_MEM_ADDR_BITS-1 : 0] tile_addr;
-    wire [15:0] sprite_data;
-    reg [7:0] tile_data;
+    // tile ram
+    reg [9:0] tile_ram_addr = 0;
+    wire [15:0] tile_ram_data;
 
-    reg [7:0] tile_mem [0 : TILE_MEM_SIZE-1];
+    addr_chained_bram #(
+        .BRAM_COUNT(3)
+    ) tile_ram_inst(
+        .wdata(write_data),
+        .waddr(write_addr),
+        .wen(mem_wr_en && ram_select),
+        .wclk(~clk), // write on falling edge of clk
+        .rdata(tile_ram_data),
+        .raddr(tile_ram_addr),
+        .ren(in_display_region),
+        .rclk(~clk) // read on falling edge of clk
+    );
 
-    reg sprite_mem_wr_en = 0;
+    // sprite ram
+    reg [15:0] sprite_ram_addr = 0;
+    wire [15:0] sprite_ram_data;
 
-    ice40_spram sprite_mem_inst (
-        .clk(clk),
-        .address(sprite_addr),
+    ice40_spram sprite_ram_inst (
+        .clk(~clk), // read/write on falling edge of clk
+        .address(mem_wr_en ? write_addr : sprite_ram_addr),
         .data_in(write_data),
-        .write_enable(~ram_select && sprite_mem_wr_en),
-        .data_out(sprite_data)
+        .write_enable(mem_wr_en && ~ram_select),
+        .data_out(sprite_ram_data)
     );
 
 
 
-    // handle memory accessing
+    assign current_pixel = sprite_ram_data;
+
+
+
+    // for splitting the sprite ram into 8x 2-bit values, 1 for each pixel
+    wire [1:0] pixels [7:0];
+
+    genvar i;
+    for (i = 0; i < 8; i = i + 1)
+        assign pixels[i] = sprite_ram_data[(i * 2 + 1) : (i * 2)];
+
+
+    // handle memory
     reg [1:0] state = 0;
 
     always @(posedge clk) begin
-        if (in_display_region)
-            case (state)
-                0: tile_data = tile_mem[tile_addr];
-                // sprite data writing is handled already
-            endcase
-
-        case (state)
-            0: dotclk = 0;
-            2: dotclk = 1;
-        endcase
-
         state = state + 1;
 
-        advance_pixel = (state == 0);
+        if (in_display_region) begin // we must read from memory
+            // set addresses of appropriate memory
+            case (state)
+                1: tile_ram_addr = display_x + (display_y * 30);
+                2: sprite_ram_addr = (24 * tile_ram_data) + 4 + (display_y % 8);
+                3: sprite_ram_addr = (24 * tile_ram_data) + pixels[display_x % 8];
+            endcase
+        end else begin // we are able to write to memory
+            // on posedge of clk, change the memory write enable to reflect if we just read from the fifo
+            mem_wr_en = spi_fifo_read;
+        end
+
+        // determine when to set dotclk
+        if (state == 0)
+            dotclk = 1;
+
+        if (state == 2)
+            dotclk = 0;
     end
 
-    reg spi_in_use = 0;
-
     always @(negedge clk) begin
-        sprite_mem_wr_en = 0;
-        spi_fifo_read = 0;
+        if (in_display_region) begin // we must read from memory
+            // reading from memory is already handled on negedge
+        end else begin // we are able to write to memory
+            // on negedge of clk, change the fifo read enable if we can read from fifo
+            spi_fifo_read = !spi_fifo_empty;
+        end
 
-        if (in_display_region)
-            case (state)
-                0: tile_addr = ((display_x / SPRITE_SIZE) + (display_y / SPRITE_SIZE) * (DISPLAY_WIDTH / SPRITE_SIZE));
-                1: sprite_addr = tile_data * SPRITE_SIZE * SPRITE_SIZE + (display_x % SPRITE_SIZE) + (display_y % SPRITE_SIZE) * SPRITE_SIZE;
-                2: current_pixel = sprite_data;
-            endcase
-        else
-            case (state)
-                0, 2: begin
-                    spi_in_use = !spi_fifo_empty;
+        // determine when to set posclk
+        if (state == 0)
+            posclk = 1;
 
-                    if (spi_in_use)
-                        spi_fifo_read = 1;
-                end
-                1, 3: begin
-                    if (spi_in_use)
-                        if (ram_select)
-                            tile_mem[write_addr] = write_data;
-                        else begin
-                            sprite_addr = write_addr;
-                            sprite_mem_wr_en = 1;
-                        end
-
-                    spi_fifo_read = 0;
-                end
-            endcase
+        if (state == 1)
+            posclk = 0;
     end
 endmodule
