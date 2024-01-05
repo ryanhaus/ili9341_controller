@@ -183,18 +183,28 @@ int main(int argc, char** argv) {
     spi_sim_inst = spi_init();
 
 
-    uint32_t transfers[] = {
-        0x0003F800,
-        0x00040000,
-        0x00050C30,
-        0x00060000,
-        0x0007300C,
-        0x00080FF0
-    };
+    // send a test sprite
+    tft_sprite sprite;
 
-    for (int i = 0; i < sizeof(transfers) / sizeof(uint32_t); i++) {
-        spi_sim_inst.data_queue.push(transfers[i]);
+    sprite.colors[0] = 0x0000; // black
+    sprite.colors[1] = 0b1111111111100000; // yellow
+
+    sprite.data[0] = 0b0000010101010000;
+    sprite.data[1] = 0b0001010101010100;
+    sprite.data[2] = 0b0101000101000101;
+    sprite.data[3] = 0b0101010101010101;
+    sprite.data[4] = 0b0100010101010001;
+    sprite.data[5] = 0b0101000000000101;
+    sprite.data[6] = 0b0001010101010100;
+    sprite.data[7] = 0b0000010101010000;
+
+    std::array<spi_transfer, 12> transfers = sprite_to_spi_transfer(sprite, 1);
+
+    for (int i = 0; i < 12; i++) {
+        spi_sim_inst.data_queue.push(transfers[i].transfer_data);
     }
+
+    spi_sim_inst.data_queue.push(0x80000001);
 
 
 

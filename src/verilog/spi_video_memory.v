@@ -112,8 +112,8 @@ module spi_video_memory # (
             // set addresses of appropriate memory
             case (state)
                 1: tile_ram_addr = (display_x / 8) + ((display_y / 8) * 30);
-                2: sprite_ram_addr = (24 * tile_ram_data) + 4 + (display_y % 8);
-                3: sprite_ram_addr = (24 * tile_ram_data) + pixels[display_x % 8];
+                2: sprite_ram_addr = (12 * tile_ram_data) + 4 + (display_y % 8);
+                3: sprite_ram_addr = (12 * tile_ram_data) + pixels[display_x % 8];
             endcase
         end else begin // we are able to write to memory
             // on posedge of clk, change the memory write enable to reflect if we just read from the fifo
