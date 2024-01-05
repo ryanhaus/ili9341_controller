@@ -111,7 +111,7 @@ module spi_video_memory # (
         if (in_display_region) begin // we must read from memory
             // set addresses of appropriate memory
             case (state)
-                1: tile_ram_addr = (display_x / 8) + ((display_y / 8) * 30);
+                1: tile_ram_addr = (29 - display_x / 8) + ((display_y / 8) * 30);
                 2: sprite_ram_addr = (12 * tile_ram_data) + 4 + (display_y % 8);
                 3: sprite_ram_addr = (12 * tile_ram_data) + pixels[display_x % 8];
             endcase
