@@ -13,6 +13,26 @@ typedef struct {
 
 
 
+tft_sprite bitmap_to_sprite(uint8_t bitmap[8], uint16_t off_color = 0x0000, uint16_t on_color = 0xFFFF) {
+    tft_sprite sprite;
+
+    sprite.colors[0] = off_color;
+    sprite.colors[1] = on_color;
+
+
+    for (int col = 0; col < 8; col++) {
+        for (int row = 0; row < 8; row++) {
+            uint8_t current_pixel = (bitmap[col] >> row) & 0b1;
+
+            sprite.data[col] |= current_pixel << (2 * row);
+        }
+    }
+    
+
+    return sprite;
+}
+
+
 std::array<spi_transfer, 12> sprite_to_spi_transfer(tft_sprite sprite, uint8_t sprite_id) {
     std::array<spi_transfer, 12> transfers;
 

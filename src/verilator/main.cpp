@@ -186,17 +186,19 @@ int main(int argc, char** argv) {
     // send a test sprite
     tft_sprite sprite;
 
-    sprite.colors[0] = 0x0000; // black
-    sprite.colors[1] = 0b1111111111100000; // yellow
+    uint8_t smile_bitmap[8] = {
+        0b00111100,
+        0b01111110,
+        0b11011011,
+        0b11111111,
+        0b10111101,
+        0b11000011,
+        0b01111110,
+        0b00111100
+    };
 
-    sprite.data[0] = 0b0000010101010000;
-    sprite.data[1] = 0b0001010101010100;
-    sprite.data[2] = 0b0101000101000101;
-    sprite.data[3] = 0b0101010101010101;
-    sprite.data[4] = 0b0100010101010001;
-    sprite.data[5] = 0b0101000000000101;
-    sprite.data[6] = 0b0001010101010100;
-    sprite.data[7] = 0b0000010101010000;
+    sprite = bitmap_to_sprite(smile_bitmap, 0x0000, 0xFFE0);
+
 
     std::array<spi_transfer, 12> transfers = sprite_to_spi_transfer(sprite, 1);
 
@@ -205,6 +207,7 @@ int main(int argc, char** argv) {
     }
 
     spi_sim_inst.data_queue.push(0x80000001);
+
 
 
 
