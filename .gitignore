@@ -2,3 +2,5 @@
 build
 dep
 *.vcd
+pcb/#auto_saved_files#
+pcb/ili9341_controller-backups
