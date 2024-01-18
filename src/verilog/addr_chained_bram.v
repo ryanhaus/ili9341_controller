@@ -16,11 +16,13 @@ module addr_chained_bram #(
 );
     reg [15:0] rdatas [BRAM_COUNT-1 : 0];
 
-    always @(*) begin
+    // NOTE: this is a workaround for yosys complaining about a combinatorial loop, may have to be fixed since ren is not considered
+    assign rdata = rdatas[raddr[ADDR_BITS-1 : 8]];
+    /*always @(*) begin
         if (ren) begin
-            rdata = rdatas[raddr[ADDR_BITS-1 : 8]];
+            rdata <= rdatas[raddr[ADDR_BITS-1 : 8]];
         end
-    end
+    end*/
 
     genvar i;
 
