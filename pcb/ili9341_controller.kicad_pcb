@@ -286,7 +286,7 @@
       (net 54 "/FLASH_QSPI_SD3") (pinfunction "IO3") (pintype "bidirectional") (tstamp 37d0d036-a9b3-4c47-95d7-8100aa07f805))
     (pad "8" smd roundrect (at 3.6 -1.905) (size 1.6 0.6) (layers "F.Cu" "F.Paste" "F.Mask") (roundrect_rratio 0.25)
       (net 1 "+3V3") (pinfunction "VCC") (pintype "power_in") (tstamp 4d1713df-e7ec-4a53-89d0-f12cc32bd396))
-    (model "${KICAD6_3DMODEL_DIR}/Package_SO.3dshapes/SOIC-8_5.23x5.23mm_P1.27mm.wrl"
+    (model "${KICAD7_3DMODEL_DIR}/Package_SO.3dshapes/SOIC-8_5.275x5.275mm_P1.27mm.step"
       (offset (xyz 0 0 0))
       (scale (xyz 1 1 1))
       (rotate (xyz 0 0 0))
@@ -1139,7 +1139,7 @@
       (net 99 "/LED_3V3_R_TO_TB") (pinfunction "B") (pintype "input") (tstamp 271d0256-28f8-42ac-a581-7ee4ffb375db))
     (pad "3" smd roundrect (at 1.1375 0) (size 1.325 0.6) (layers "F.Cu" "F.Paste" "F.Mask") (roundrect_rratio 0.25)
       (net 17 "GND") (pinfunction "E") (pintype "open_emitter") (tstamp efb7921a-f33e-4e81-a421-a28a3cb8a9a0))
-    (model "${KICAD6_3DMODEL_DIR}/Package_TO_SOT_SMD.3dshapes/SOT-23-3.wrl"
+    (model "${KICAD7_3DMODEL_DIR}/Package_TO_SOT_SMD.3dshapes/SOT-23.wrl"
       (offset (xyz 0 0 0))
       (scale (xyz 1 1 1))
       (rotate (xyz 0 0 0))
@@ -1366,7 +1366,7 @@
       (net 97 "/LED_1V2_R_TO_TB") (pinfunction "B") (pintype "input") (tstamp c6a03335-6139-4e34-a898-7d4796ac5311))
     (pad "3" smd roundrect (at 1.1375 0) (size 1.325 0.6) (layers "F.Cu" "F.Paste" "F.Mask") (roundrect_rratio 0.25)
       (net 17 "GND") (pinfunction "E") (pintype "open_emitter") (tstamp 5437130a-f329-43e7-9c6c-46a74500cb47))
-    (model "${KICAD6_3DMODEL_DIR}/Package_TO_SOT_SMD.3dshapes/SOT-23-3.wrl"
+    (model "${KICAD7_3DMODEL_DIR}/Package_TO_SOT_SMD.3dshapes/SOT-23.wrl"
       (offset (xyz 0 0 0))
       (scale (xyz 1 1 1))
       (rotate (xyz 0 0 0))
@@ -1751,7 +1751,7 @@
       (net 101 "/LED_2V5_R_TO_TB") (pinfunction "B") (pintype "input") (tstamp 3c920b0a-1147-43aa-8514-3604ec1e5034))
     (pad "3" smd roundrect (at 1.1375 0) (size 1.325 0.6) (layers "F.Cu" "F.Paste" "F.Mask") (roundrect_rratio 0.25)
       (net 17 "GND") (pinfunction "E") (pintype "open_emitter") (tstamp 1b36fe7e-0c0a-4642-9b4e-353d581bab0e))
-    (model "${KICAD6_3DMODEL_DIR}/Package_TO_SOT_SMD.3dshapes/SOT-23-3.wrl"
+    (model "${KICAD7_3DMODEL_DIR}/Package_TO_SOT_SMD.3dshapes/SOT-23.wrl"
       (offset (xyz 0 0 0))
       (scale (xyz 1 1 1))
       (rotate (xyz 0 0 0))
@@ -4268,7 +4268,7 @@
     (model "${KIPRJMOD}/ABLS2-12.000MHZ-D4Y-T.step"
       (offset (xyz 0 0 0))
       (scale (xyz 1 1 1))
-      (rotate (xyz 90 180 0))
+      (rotate (xyz 90 180 180))
     )
   )
 
@@ -4957,7 +4957,7 @@
       (net 17 "GND") (pinfunction "GND") (pintype "power_in") (tstamp 515ac100-413b-4f36-8d14-fbda534bd146))
     (pad "MP" smd rect (at -13.92 0.35 90) (size 2.3 3.1) (layers "F.Cu" "F.Paste" "F.Mask") (tstamp 77f8125c-ee42-4fbe-8c4d-57d93736bfa2))
     (pad "MP" smd rect (at 13.92 0.35 90) (size 2.3 3.1) (layers "F.Cu" "F.Paste" "F.Mask") (tstamp 0a7766e1-08f8-4d95-93fd-de04aa4597dc))
-    (model "${KICAD6_3DMODEL_DIR}/Connector_FFC-FPC.3dshapes/TE_5-1734839-0_1x50-1MP_P0.5mm_Horizontal.wrl"
+    (model "${KICAD7_3DMODEL_DIR}/Connector_FFC-FPC.3dshapes/TE_2-84952-5_1x25-1MP_P1.0mm_Horizontal.wrl"
       (offset (xyz 0 0 0))
       (scale (xyz 1 1 1))
       (rotate (xyz 0 0 0))
@@ -6563,10 +6563,10 @@
       (net 17 "GND") (pinfunction "Shield") (pintype "passive") (tstamp bf73ab5d-9711-4882-a496-0fac38e9aa8e))
     (pad "6" thru_hole oval (at 3.5 1.2375) (size 1.2 1.9) (drill oval 0.6 1.3) (layers "*.Cu" "*.Mask")
       (net 17 "GND") (pinfunction "Shield") (pintype "passive") (tstamp 7b0c3fcf-9b6c-4bbd-842a-f97607ba7961))
-    (model "${KICAD6_3DMODEL_DIR}/Connector_USB.3dshapes/USB_Micro-B_Molex-105017-0001.wrl"
-      (offset (xyz 0 0 0))
+    (model "${KIPRJMOD}/1050170001.step"
+      (offset (xyz 0 -1 0))
       (scale (xyz 1 1 1))
-      (rotate (xyz 0 0 0))
+      (rotate (xyz -90 0 0))
     )
   )
 
