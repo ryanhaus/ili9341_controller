@@ -31,3 +31,10 @@ Below is a screenshot of a simulation with a bunch of smiley face sprites:
 
 ## Cleaning
 `make clean` will remove all build files. The dependencies will remain in the `dep` folder.
+
+## Hardware (WIP)
+All KiCad files for the PCB are in the `pcb` folder. Click [here](./pcb/sch.pdf) to download the current schematic as a PDF (`pcb/sch.pdf`).
+Top view of current PCB design:
+![](./photos/pcb_top.png)
+Bottom view of current PCB design:
+![](./photos/pcb_bottom.png)
