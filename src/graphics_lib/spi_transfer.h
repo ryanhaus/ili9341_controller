@@ -1,17 +1,6 @@
 #pragma once
 
-#include <queue>
 #include <stdint.h>
-
-
-
-typedef struct {
-    std::queue<uint32_t> data_queue;
-
-    size_t data_index;
-    uint8_t bit_index;
-} spi_inst;
-
 
 
 typedef struct {
@@ -29,12 +18,8 @@ typedef struct {
 
 
 
-spi_inst spi_init() {
-    spi_inst inst;
-    inst.data_queue = std::queue<uint32_t>();
 
-    inst.data_index = 0;
-    inst.bit_index = 0;
 
-    return inst;
-}
+
+
+extern void spi_transfer_data_blocking(uint32_t data);

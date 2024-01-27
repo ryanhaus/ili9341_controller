@@ -3,11 +3,14 @@
 #include <Vili9341_controller.h>
 #include <verilated_vcd_c.h>
 #include <SDL.h>
+#include <thread>
+#include <queue>
 
 #include "clock_handler.h"
 #include "tft_sim.h"
 #include "spi_sim.h"
 #include "../graphics_lib/sprites.h"
+#include "../game/game_main.h"
 
 
 
@@ -26,9 +29,9 @@ SDL_Window* window;
 SDL_Renderer* renderer;
 SDL_Texture* texture;
 
-spi_inst spi_sim_inst;
-
 tft_pixel framebuffer[320 * 240];
+
+extern std::queue<uint32_t> spi_queue;
 
 
 
@@ -56,17 +59,18 @@ bool state_machine_clock_tick(uint64_t time_ps) {
 
 
 // handle sck clock ticks
-bool done = false;
+bool transfer_active = false;
 
 bool sck_clock_tick(uint64_t time_ps) {
     if (top->spi_ready) {
-        if (!done) {
-            done = spi_sim_inst.data_queue.empty();
+        if (transfer_active || (spi_queue.size() > 0)) {
             top->spi_sck = !top->spi_sck;
+            transfer_active = (spi_queue.size() > 0);
 
             if (!top->spi_sck) {
-                top->spi_sda = spi_next_bit(&spi_sim_inst);
+                top->spi_sda = spi_next_bit();
             }
+
 
             top->eval();
         }
@@ -179,35 +183,9 @@ int main(int argc, char** argv) {
     }
 
 
-    // set up SPI simulation
-    spi_sim_inst = spi_init();
 
-
-    // send a test sprite
-    tft_sprite sprite;
-
-    uint8_t smile_bitmap[8] = {
-        0b00111100,
-        0b01111110,
-        0b11011011,
-        0b11111111,
-        0b10111101,
-        0b11000011,
-        0b01111110,
-        0b00111100
-    };
-
-    sprite = bitmap_to_sprite(smile_bitmap, 0x0000, 0xFFE0);
-
-
-    std::array<spi_transfer, 12> transfers = sprite_to_spi_transfer(sprite, 1);
-
-    for (int i = 0; i < 12; i++) {
-        spi_sim_inst.data_queue.push(transfers[i].transfer_data);
-    }
-
-    spi_sim_inst.data_queue.push(0x80000001);
-
+    // start the game code
+    std::thread game_thread(game_main);
 
 
 
@@ -253,6 +231,10 @@ int main(int argc, char** argv) {
         SDL_DestroyWindow(window);
         SDL_Quit();
     }
+
+
+
+    std::terminate(); // to also kill child thread handling game code
 
     return 0;
 }

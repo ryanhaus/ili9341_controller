@@ -85,6 +85,7 @@ $(build_dir)/$(verilator_sim_bin_name): $(verilator_src_dir)/* $(verilog_src_dir
 	 $(verilator_arguments) \
 	-CFLAGS "-g -Wall -Ublackbox $(shell sdl2-config --cflags)" \
 	-LDFLAGS "$(shell sdl2-config --libs)" \
+	$(verilator_src_dir)/*.cpp
 
 
 

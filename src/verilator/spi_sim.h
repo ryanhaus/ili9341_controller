@@ -1,17 +1,24 @@
 #pragma once
 
 #include "../graphics_lib/spi_transfer.h"
+#include <queue>
+#include <stdint.h>
 
 
 
-bool spi_next_bit(spi_inst* inst) {
-    bool bit = inst->data_queue.front() & (0x80000000 >> inst->bit_index);
+uint8_t bit_index = 0;
+extern std::queue<uint32_t> spi_queue;
 
-    inst->bit_index++;
+
+
+bool spi_next_bit() {
+    bool bit = spi_queue.front() & (0x80000000 >> bit_index);
+
+    bit_index++;
     
-    if (inst->bit_index == 32) {
-        inst->data_queue.pop();
-        inst->bit_index = 0;
+    if (bit_index == 32) {
+        spi_queue.pop();
+        bit_index = 0;
     }
 
     return bit;
