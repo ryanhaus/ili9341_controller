@@ -19,6 +19,8 @@ verilator_sim_bin_name = V$(verilator_top_module_name)
 verilator_src_dir = src/verilator
 verilator_include_dir = /usr/share/verilator/include
 
+graphics_lib_src_dir = src/graphics_lib
+
 
 
 # to create the PLL module
@@ -73,7 +75,7 @@ fpga_output_c_arr: $(build_dir)/$(output_header)
 
 
 # verilator, for simulation
-$(build_dir)/$(verilator_sim_bin_name): $(verilator_src_dir)/* $(verilog_src_dir)/*
+$(build_dir)/$(verilator_sim_bin_name): $(verilator_src_dir)/* $(verilog_src_dir)/* $(graphics_lib_src_dir)/*
 	-mkdir build
 	verilator $(verilator_top_module_name).v \
 	 -I$(verilog_src_dir) \

@@ -1,8 +1,6 @@
 #pragma once
 
 #include <stdint.h>
-#include "tft_sim.h"
-#include "spi_sim.h"
 
 
 
@@ -31,6 +29,7 @@ tft_sprite bitmap_to_sprite(uint8_t bitmap[8], uint16_t off_color = 0x0000, uint
 
     return sprite;
 }
+
 
 
 std::array<spi_transfer, 12> sprite_to_spi_transfer(tft_sprite sprite, uint8_t sprite_id) {

@@ -7,7 +7,7 @@
 #include "clock_handler.h"
 #include "tft_sim.h"
 #include "spi_sim.h"
-#include "sprites.h"
+#include "../graphics_lib/sprites.h"
 
 
 
