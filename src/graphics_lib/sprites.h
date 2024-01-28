@@ -1,6 +1,7 @@
 #pragma once
-
+#include "spi_transfer.h"
 #include <stdint.h>
+#include <array>
 
 
 

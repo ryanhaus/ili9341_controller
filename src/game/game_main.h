@@ -24,12 +24,12 @@ void game_main() {
     std::array<spi_transfer, 12> transfers = sprite_to_spi_transfer(sprite, 1);
 
     for (int i = 0; i < 12; i++) {
-        spi_transfer_data_blocking(transfers[i].transfer_data);
+        spi_transfer_u32_blocking(transfers[i].transfer_data);
     }
 
-    spi_transfer_data_blocking(0x80000001);
+    spi_transfer_u32_blocking(0x80000001);
 
     while (true) {
-        wait_ms(10);
+        sleep_ms(10);
     }
 }

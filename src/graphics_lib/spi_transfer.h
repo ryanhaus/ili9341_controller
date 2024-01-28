@@ -15,11 +15,3 @@ typedef struct {
         };
     };
 } spi_transfer;
-
-
-
-
-
-
-
-extern void spi_transfer_data_blocking(uint32_t data);

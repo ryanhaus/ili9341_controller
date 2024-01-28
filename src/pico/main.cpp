@@ -5,6 +5,10 @@
 #include "pico/platform.h"
 #include "fpga_config.h"
 
+#include "../game/game_main.h"
+
+
+
 int main() {
 	fpga_config_info config_info;
 	config_info.spi = spi0;
@@ -21,6 +25,8 @@ int main() {
 	gpio_init(25);
 	gpio_set_dir(25, GPIO_OUT);
 	gpio_put(25, 1);
+
+	game_main();
 
 	return 0;
 }

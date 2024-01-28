@@ -7,7 +7,14 @@ set(CMAKE_CXX_STANDARD 17)
 
 pico_sdk_init()
 
-add_executable(${PROJECT_NAME} src/pico/main.cpp)
+
+file(
+	GLOB SOURCES
+	src/pico/*.cpp
+)
+
+add_executable(${PROJECT_NAME} ${SOURCES})
+
 target_link_libraries(${PROJECT_NAME}
 	pico_stdlib
 	hardware_spi
