@@ -90,19 +90,32 @@ void dump(uint64_t time_ps) {
 
 
 
+// print the help menu
+void print_help(char** argv) {
+    std::cout << "Usage: " << argv[0] << " [options]" << std::endl;
+    std::cout << "Options:" << std::endl;
+    std::cout << "  --max-time [time_ns]    Maximum simulation time in nanoseconds (default: infinity)" << std::endl;
+    std::cout << "  --trace                 Enable tracing (generates a VCD file)" << std::endl;
+    std::cout << "  --gtkwave               Automatically open the VCD file with GTKWave (requires it to be installed, sudo apt install gtkwave)" << std::endl;
+    std::cout << "  --screen-sim            Simulate a physical screen connected to the FPGA with SDL" << std::endl;
+    std::cout << "  --screen-scale [scale]  Changes the scale of the simulated 240x320 screen (default: 1x scale)" << std::endl;
+}
+
+
+
 int main(int argc, char** argv) {
     // handle command line arguments
+    if (argc == 1) {
+        std::cout << "Error: No arguments provided." << std::endl;
+        print_help(argv);
+        return 0;
+    }
+
     for (int i = 1; i < argc; i++) {
         std::string arg = argv[i];
 
         if (arg == "--help") {
-            std::cout << "Usage: " << argv[0] << " [options]" << std::endl;
-            std::cout << "Options:" << std::endl;
-            std::cout << "  --max-time [time_ns]    Maximum simulation time in nanoseconds (default: infinity)" << std::endl;
-            std::cout << "  --trace                 Enable tracing (generates a VCD file)" << std::endl;
-            std::cout << "  --gtkwave               Automatically open the VCD file with GTKWave (requires it to be installed, sudo apt install gtkwave)" << std::endl;
-            std::cout << "  --screen-sim            Simulate a physical screen connected to the FPGA with SDL" << std::endl;
-            std::cout << "  --screen-scale [scale]  Changes the scale of the simulated 240x320 screen (default: 1x scale)" << std::endl;
+            print_help(argv);
             return 0;
         } else if (arg == "--max-time") {
             if (i + 1 >= argc) {
