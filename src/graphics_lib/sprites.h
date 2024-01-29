@@ -5,6 +5,11 @@
 
 
 
+#define RGB565_TO_U16(r, g, b) (uint16_t)((((r & 0xF8) >> 3) << 11) | (((g & 0xFC) >> 2) << 5) | ((b & 0xF8) >> 3))
+#define INDEX8_TO_U16(i0, i1, i2, i3, i4, i5, i6, i7) (uint16_t)((i0 << 14) | (i1 << 12) | (i2 << 10) | (i3 << 8) | (i4 << 6) | (i5 << 4) | (i6 << 2) | i7)
+
+
+
 typedef struct {
     uint16_t colors[4];
     uint16_t data[8];
