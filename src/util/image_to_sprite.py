@@ -12,8 +12,7 @@ output_file = sys.argv[2]
 
 
 # load image
-image_f = Image.open(image_file)
-pixels = image_f.getdata()
+image_f = Image.open(image_file).convert("RGB")
 
 
 
@@ -104,7 +103,8 @@ output_f.write("const tft_sprite SPRITES[256] = {\n")
 
 for i in range(16):
     for j in range(16):
-        pixels = list(image_f.crop((j * 8, i * 8, (j + 1) * 8, (i + 1) * 8)).getdata())
+        cropped_sprite = image_f.crop((i * 8, j * 8, (i + 1) * 8, (j + 1) * 8))
+        pixels = list(cropped_sprite.getdata())
         image_to_sprite_write_f(pixels)
 
 output_f.write("};\n")
