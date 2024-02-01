@@ -1,3 +1,5 @@
+PYTHON = python3
+
 build_dir = build
 pico_src_dir = src/pico
 pico_main_file = $(pico_src_dir)/main.c
@@ -20,6 +22,8 @@ verilator_src_dir = src/verilator
 verilator_include_dir = /usr/share/verilator/include
 
 graphics_lib_src_dir = src/graphics_lib
+game_src_dir = src/game
+util_src_dir = src/util
 
 
 
@@ -75,7 +79,10 @@ fpga_output_c_arr: $(build_dir)/$(output_header)
 
 
 # verilator, for simulation
-$(build_dir)/$(verilator_sim_bin_name): $(verilator_src_dir)/* $(verilog_src_dir)/* $(graphics_lib_src_dir)/*
+$(game_src_dir)/sprites_generated.h: $(util_src_dir)/sprites.png
+	$(PYTHON) $(util_src_dir)/image_to_sprite.py $(util_src_dir)/sprites.png $(game_src_dir)/sprites_generated.h
+
+$(build_dir)/$(verilator_sim_bin_name): $(verilator_src_dir)/* $(verilog_src_dir)/* $(graphics_lib_src_dir)/* $(game_src_dir)/* $(game_src_dir)/sprites_generated.h
 	-mkdir build
 	verilator $(verilator_top_module_name).v \
 	 -I$(verilog_src_dir) \
@@ -115,5 +122,6 @@ pico: $(build_dir)/pico_out.uf2
 clean:
 	rm -rf $(build_dir)
 	rm -f $(verilog_src_dir)/$(pll_module_name).v
+	rm -f $(game_src_dir)/sprites_generated.h
 
 .DEFAULT_GOAL := pico
