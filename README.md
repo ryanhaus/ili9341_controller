@@ -26,8 +26,8 @@ To build the simulation program, run `make verilator`.
 To run the simulation program, run `./build/Vili9341_controller`. The program will not do anything useful by default, but all the options can be viewed with the `--help` argument.
 ### Screen Simulation
 To show the simulated screen output, run `./build/Vili9341_controller --screen-sim`. The `--screen-scale` argument can also be used to scale the screen, the default is 1x (240x320 px).
-Below is a screenshot of a simulation with a bunch of smiley face sprites:
-![](photos/sim_smile.png)
+Below is a screenshot of a simulation with letter sprites:
+![](photos/sim_screenshot.png)
 
 ## Cleaning
 `make clean` will remove all build files. The dependencies will remain in the `dep` folder.
