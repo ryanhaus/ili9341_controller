@@ -63,9 +63,9 @@ bool transfer_active = false;
 
 bool sck_clock_tick(uint64_t time_ps) {
     if (top->spi_ready) {
-        if (transfer_active || (spi_queue.size() > 0)) {
+        if (transfer_active || (!spi_queue.empty())) {
             top->spi_sck = !top->spi_sck;
-            transfer_active = (spi_queue.size() > 0);
+            transfer_active = (!spi_queue.empty());
 
             if (!top->spi_sck) {
                 top->spi_sda = spi_next_bit();

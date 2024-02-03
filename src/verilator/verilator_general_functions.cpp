@@ -2,6 +2,7 @@
 #include <chrono>
 #include <thread>
 #include <queue>
+#include <mutex>
 
 
 
@@ -14,11 +15,15 @@ void sleep_ms(uint32_t ms) {
 
 // spi_transfer_u32_blocking
 std::queue<uint32_t> spi_queue;
+std::mutex spi_queue_mutex;
 
 void spi_transfer_u32_blocking(uint32_t data) {
+    spi_queue_mutex.lock();
     spi_queue.push(data);
+    spi_queue_mutex.unlock();
     
-    while (!spi_queue.empty()) {
-        asm("NOP");
-    }
+    // NOTE: have to find new solution for this part, but it should work the same without the blocking for simulation
+    // while (!spi_queue.empty()) {
+    //     asm("NOP");
+    // }
 }
