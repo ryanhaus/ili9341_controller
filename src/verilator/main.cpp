@@ -4,6 +4,7 @@
 #include <verilated_vcd_c.h>
 #include <SDL.h>
 #include <thread>
+#include <mutex>
 #include <queue>
 
 #include "clock_handler.h"
@@ -32,7 +33,8 @@ SDL_Texture* texture;
 tft_pixel framebuffer[320 * 240];
 
 extern std::queue<uint32_t> spi_queue;
-
+extern std::mutex spi_queue_mutex;
+std::mutex verilator_mutex;
 
 
 // handle state machine clock ticks, also handle determining positive edges of the dotclk for SDL simulation functions if applicable
@@ -40,6 +42,8 @@ int previous_tft_dotclk = 0;
 
 bool state_machine_clock_tick(uint64_t time_ps) {
     bool continue_sim = true;
+
+    verilator_mutex.lock();
 
     top->sm_clock = !top->sm_clock;
     top->eval();
@@ -53,6 +57,8 @@ bool state_machine_clock_tick(uint64_t time_ps) {
         previous_tft_dotclk = top->tft_dotclk;
     }
 
+    verilator_mutex.unlock();
+
     return continue_sim;
 }
 
@@ -62,6 +68,8 @@ bool state_machine_clock_tick(uint64_t time_ps) {
 bool transfer_active = false;
 
 bool sck_clock_tick(uint64_t time_ps) {
+    verilator_mutex.lock();
+
     if (top->spi_ready) {
         if (transfer_active || (!spi_queue.empty())) {
             top->spi_sck = !top->spi_sck;
@@ -76,6 +84,8 @@ bool sck_clock_tick(uint64_t time_ps) {
         }
     }
 
+    verilator_mutex.unlock();
+
     return true;
 }
 
@@ -83,9 +93,13 @@ bool sck_clock_tick(uint64_t time_ps) {
 
 // dump the current state of the verilator instance to the vcd file
 void dump(uint64_t time_ps) {
+    verilator_mutex.lock();
+
     if (VERILATOR_TRACE) {
         m_trace->dump(time_ps);
     }
+
+    verilator_mutex.unlock();
 }
 
 
